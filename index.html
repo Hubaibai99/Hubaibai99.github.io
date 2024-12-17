@@ -1,1 +1,81 @@
-<h1>欢迎你，宝贝儿</h1>
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>胡摆摆的个人引导页</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="icon" href="images/logo.ico" type="icon">
+</head>
+
+<body class="is-preload">
+
+	<div id="wrapper">
+
+		<header id="header">
+			<div class="logo">
+				<!-- <span class="icon fa-gem"></span> -->
+				<img src="https://q1.qlogo.cn/g?b=qq&nk=211941596&s=640" width="100%" style="border-radius: 50px;"
+					alt="">
+			</div>
+			<div class="content">
+				<div class="inner">
+					<h1>胡摆摆的个人引导页</h1>
+					<p id="yl">热爱的事情 困难重重也要继续下去</p>
+				</div>
+			</div>
+			<nav>
+				<ul>
+					<li><a href="javascript:alert('未开通')">博客</a></li>
+	
+
+				</ul>
+			</nav>
+		</header>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<p id="copyright" class="copyright">Copyright &copy; 2021-xxxx 胡摆摆</p>
+			<p class="copyright">备案:<a href="https://beian.miit.gov.cn/#/Integrated/index">蜀ICP备2023020839号-1</a></p>
+			<p class="copyright">
+				<a target="_blank" href="tencent://message/?uin=757453794&Site=&Menu=yes">
+					<img src="images/qq.svg" width="30" alt="QQ:211941596" title="QQ:211941596">&nbsp;&nbsp;
+				</a> 
+				<a target="_blank"	href="mailto:211941596@qq.com"> 
+					<img src="images/mail.svg" width="30" alt="Mail"
+						title="Mail:211941596@qq.com">&nbsp;&nbsp;
+				</a> 
+				<a target="_blank" href="images/z_wechat.jpg" width="30" alt="请我喝奶茶" title="请我喝奶茶">
+					<img src="images/money_receiving_QR_code.svg" width="30" alt="">
+				</a>
+				
+		</footer>
+	
+	</div>
+
+	<!-- BG -->
+	<div id="bg"></div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script >
+	async function getIpClient() {
+	  try {
+		const response = await axios.get('https://api.ipify.org?format=json');
+		console.log('您的ip地址为:'+response.data.ip);
+	  } catch (error) {
+		console.error(error);
+	  }
+	}
+	
+	getIpClient();
+	</script>
+
+
+</body>
+
+</html>
