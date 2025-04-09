@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <title>抖音式视频播放器</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 禁止滚动 */
+            position: relative;
+        }
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+        .video-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
+        html, body {
+            touch-action: none; /* 禁止触摸操作 */
+            overscroll-behavior: none; /* 禁止页面滚动 */
+        }
+        #nextButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            z-index: 1000; /* 确保按钮在视频上方显示 */
+        }
+    </style>
+</head>
+<body>
+    <div id="videoContainer" class="video-container">
+        <video id="videoPlayer" muted loop></video>
+    </div>
+    
+    <button id="nextButton" onclick="playNextVideo()">下一个视频</button>
+
+    <script>
+        const api = "https://api.kxzjoker.cn/api/Beautyvideo?type=json"; // API地址
+        const correctPassword = '288645'; // 设定正确的密码
+        let videoQueue = []; // 存储视频队列
+        let isMuted = true; // 视频初始为静音状态
+
+        // 检测是否是电脑设备
+        function isDesktop() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            return /windows|macintosh|linux/i.test(userAgent); // 如果是桌面设备，返回 true
+        }
+
+        // 检查是否已登录
+        function isLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true'; // 如果localStorage中有isLoggedIn且为true，表示已登录
+        }
+
+        // 页面加载时，自动获取第一个视频
+        window.onload = async () => {
+            if (isDesktop()) {
+                alert("不可电脑端访问")
+                window.close(); // 如果是电脑设备，关闭当前窗口
+                return;
+            }
+
+            if (!isLoggedIn()) {
+                showLoginPrompt(); // 如果没有登录，弹出登录框
+            } else {
+                await loadVideosFromCache(); // 尝试从缓存加载视频
+                await loadVideosFromApi();   // 从API加载视频并更新缓存
+            }
+        };
+
+        // 显示登录框
+        function showLoginPrompt() {
+            const enteredPassword = prompt('请输入密码：'); // 弹出输入框要求输入密码
+            if (enteredPassword === correctPassword) {
+                localStorage.setItem('isLoggedIn', 'true'); // 密码正确，设置登录状态
+                alert('登录成功!');
+                window.location.reload(); // 重新加载页面
+            } else {
+                alert('密码错误，请重试');
+                showLoginPrompt(); // 如果密码错误，再次弹出登录框
+            }
+        }
+
+        // 尝试从缓存加载视频
+        async function loadVideosFromCache() {
+            const cachedVideos = JSON.parse(localStorage.getItem('videoCache')) || [];
+            if (cachedVideos.length > 0) {
+                videoQueue = cachedVideos; // 将缓存的视频加载到队列中
+                playNextVideo(); // 播放第一个视频
+            }
+        }
+
+        // 从API加载视频并更新缓存
+        async function loadVideosFromApi() {
+            try {
+                const response = await $.get(api); // 获取视频数据
+                const videoUrl = response.download_url; // 获取视频下载地址
+                if (videoUrl) {
+                    videoQueue.push(videoUrl); // 将新的视频加入队列
+                    localStorage.setItem('videoCache', JSON.stringify(videoQueue)); // 更新缓存
+                }
+            } catch (error) {
+                console.error("获取视频数据时出错:", error);
+            }
+        }
+
+        // 播放下一个视频
+        async function playNextVideo() {
+            if (videoQueue.length === 0) return; // 如果没有视频，直接返回
+
+            const videoUrl = videoQueue.shift(); // 获取并移除队列中的第一个视频地址
+            const videoElement = document.getElementById("videoPlayer");
+            videoElement.src = videoUrl; // 更新视频源
+
+            // 确保音量设置为最大值
+            videoElement.volume = 1;  // 设置音量为最大，0-1之间
+            videoElement.muted = isMuted ? true : false; // 确保根据静音状态进行音频处理
+
+            // 视频播放失败时触发错误处理
+            videoElement.onerror = function() {
+                console.error("视频加载失败");
+                loadVideosFromApi(); // 重新加载视频
+            };
+
+            // 添加视频播放监听
+            videoElement.oncanplay = function() {
+                videoElement.play(); // 开始播放视频
+            };
+
+            // 确保视频播放完后自动加载下一个视频
+            videoElement.onended = function() {
+                // 加载下一个视频并删除已播放的视频链接
+                playNextVideo();
+            };
+
+            // 每次播放视频时持续加载下一个视频
+            loadVideosFromApi();
+        }
+
+        // 点击屏幕切换静音状态
+        document.addEventListener('click', function() {
+            const videoElement = document.getElementById("videoPlayer");
+            videoElement.muted = false; // 取消静音
+          
+            // 切换静音状态
+            isMuted = !isMuted;
+        });
+
+        // 滚动到页面底部时自动加载下一个视频
+        $(window).on('scroll', function() {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+                loadVideosFromApi(); // 当页面接近底部时，加载更多视频
+            }
+        });
+    </script>
+</body>
+</html>
