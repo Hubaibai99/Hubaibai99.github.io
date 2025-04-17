@@ -43,6 +43,9 @@
             border-radius: 5px;
             z-index: 1000; /* 确保按钮在视频上方显示 */
         }
+        #nextButton.green {
+            background-color: green; /* 如果缓存中有视频，按钮变绿 */
+        }
     </style>
 </head>
 <body>
@@ -65,12 +68,12 @@
 
         // 页面加载时，自动获取第一个视频
         window.onload = async () => {
-           
             if (!isLoggedIn()) {
                 showLoginPrompt(); // 如果没有登录，弹出登录框
             } else {
                 await loadVideosFromCache(); // 尝试从缓存加载视频
                 await loadVideosFromApi();   // 从API加载视频并更新缓存
+                updateNextButton();          // 更新按钮颜色
             }
         };
 
@@ -99,12 +102,19 @@
         // 从API加载视频并更新缓存
         async function loadVideosFromApi() {
             try {
-                const response = await $.get(api); // 获取视频数据
-                const videoUrl = response.download_url; // 获取视频下载地址
-                if (videoUrl) {
-                    videoQueue.push(videoUrl); // 将新的视频加入队列
-                    localStorage.setItem('videoCache', JSON.stringify(videoQueue)); // 更新缓存
+                const requests = [];
+                for (let i = 0; i < 5; i++) {
+                    requests.push($.get(api)); // 并行发送5个请求
                 }
+                const responses = await Promise.all(requests); // 等待所有请求完成
+                
+                responses.forEach(response => {
+                    const videoUrl = response.download_url;
+                    if (videoUrl) {
+                        videoQueue.push(videoUrl); // 将新的视频加入队列
+                        localStorage.setItem('videoCache', JSON.stringify(videoQueue)); // 更新缓存
+                    }
+                });
             } catch (error) {
                 console.error("获取视频数据时出错:", error);
             }
@@ -141,6 +151,17 @@
 
             // 每次播放视频时持续加载下一个视频
             loadVideosFromApi();
+            updateNextButton(); // 更新按钮颜色
+        }
+
+        // 更新"下一个视频"按钮的颜色
+        function updateNextButton() {
+            const nextButton = document.getElementById("nextButton");
+            if (videoQueue.length > 0) {
+                nextButton.classList.add('green'); // 如果缓存中有视频，按钮为绿色
+            } else {
+                nextButton.classList.remove('green'); // 如果没有视频，按钮为黑色
+            }
         }
 
         // 点击屏幕切换静音状态
