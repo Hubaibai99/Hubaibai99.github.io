@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>胡摆摆的Blog</title>
+    <link>https://www.xhwv.cn/</link>
+    
+    <image>
+      <url>https://www.xhwv.cn/icon.png</url>
+      <title>胡摆摆的Blog</title>
+      <link>https://www.xhwv.cn/</link>
+    </image>
+    
+    <atom:link href="https://www.xhwv.cn/atom.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>胡摆摆的个人技术博客，分享编程经验、技术见解和生活感悟</description>
+    <pubDate>Fri, 27 Jun 2025 07:08:33 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>用Flask快速搭建一个后端接口</title>
+      <link>https://www.xhwv.cn/p/7af8bbb3.html</link>
+      <guid>https://www.xhwv.cn/p/7af8bbb3.html</guid>
+      <pubDate>Thu, 26 Jun 2025 06:03:35 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;👋-嘿，想快速搭个Flask后端？跟我来！&quot;&gt;&lt;a href=&quot;#👋-嘿，想快速搭个Flask后端？跟我来！&quot; class=&quot;headerlink&quot; title=&quot;👋 嘿，想快速搭个Flask后端？跟我来！&quot;&gt;&lt;/a&gt;👋</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Flask/">Flask</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/7af8bbb3.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>NumPy 的使用</title>
+      <link>https://www.xhwv.cn/p/fc51d1ab.html</link>
+      <guid>https://www.xhwv.cn/p/fc51d1ab.html</guid>
+      <pubDate>Tue, 24 Jun 2025 07:51:19 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;Numpy&quot;&gt;&lt;a href=&quot;#Numpy&quot; class=&quot;headerlink&quot; title=&quot;Numpy&quot;&gt;&lt;/a&gt;Numpy&lt;/h1&gt;&lt;h3 id=&quot;一、核心概念：NumPy-数组（ndarray）&quot;&gt;&lt;a</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/python/">python</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/fc51d1ab.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>带你白嫖图床，图片引入失败？一分钟搞定</title>
+      <link>https://www.xhwv.cn/p/348804f6.html</link>
+      <guid>https://www.xhwv.cn/p/348804f6.html</guid>
+      <pubDate>Tue, 24 Jun 2025 01:30:05 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;引入外部图片方法&quot;&gt;&lt;a href=&quot;#引入外部图片方法&quot; class=&quot;headerlink&quot; title=&quot;引入外部图片方法&quot;&gt;&lt;/a&gt;引入外部图片方法&lt;/h1&gt;&lt;h3 id=&quot;无效的方法&quot;&gt;&lt;a href=&quot;#无效的方法&quot;</description>
+          
+        
+      
+      
+      
+      
+      
+      
+      <comments>https://www.xhwv.cn/p/348804f6.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Pandas的使用</title>
+      <link>https://www.xhwv.cn/p/c6ad9c96.html</link>
+      <guid>https://www.xhwv.cn/p/c6ad9c96.html</guid>
+      <pubDate>Sat, 21 Jun 2025 07:51:19 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;Pandas&quot;&gt;&lt;a href=&quot;#Pandas&quot; class=&quot;headerlink&quot; title=&quot;Pandas&quot;&gt;&lt;/a&gt;Pandas&lt;/h1&gt;&lt;p&gt;使用 &lt;a</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/python/">python</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/c6ad9c96.html#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>
