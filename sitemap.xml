@@ -99,6 +99,13 @@
   </url>
   
   <url>
+    <loc>https://www.xhwv.cn/tags/Flask/</loc>
+    <lastmod>2025-07-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xhwv.cn/tags/Hexo/</loc>
     <lastmod>2025-07-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -121,13 +128,6 @@
   
   <url>
     <loc>https://www.xhwv.cn/tags/Python%E8%84%9A%E6%9C%AC/</loc>
-    <lastmod>2025-07-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xhwv.cn/tags/Flask/</loc>
     <lastmod>2025-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
