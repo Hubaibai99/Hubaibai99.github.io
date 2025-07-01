@@ -15,7 +15,7 @@
     <atom:link href="https://www.xhwv.cn/atom.xml" rel="self" type="application/rss+xml"/>
     
     <description>胡摆摆的个人技术博客，分享编程经验、技术见解和生活感悟</description>
-    <pubDate>Tue, 01 Jul 2025 13:22:20 GMT</pubDate>
+    <pubDate>Tue, 01 Jul 2025 15:28:17 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -40,9 +40,7 @@
       
       <category domain="https://www.xhwv.cn/tags/Hexo/">Hexo</category>
       
-      <category domain="https://www.xhwv.cn/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">自动化部署</category>
-      
-      <category domain="https://www.xhwv.cn/tags/Python%E8%84%9A%E6%9C%AC/">Python脚本</category>
+      <category domain="https://www.xhwv.cn/tags/CDN%E5%8A%A0%E9%80%9F/">CDN加速</category>
       
       
       <comments>https://www.xhwv.cn/p/870bf97.html#disqus_thread</comments>
