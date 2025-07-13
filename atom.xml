@@ -15,8 +15,37 @@
     <atom:link href="https://www.xhwv.cn/atom.xml" rel="self" type="application/rss+xml"/>
     
     <description>胡摆摆的个人技术博客，分享编程经验、技术见解和生活感悟</description>
-    <pubDate>Thu, 10 Jul 2025 18:48:14 GMT</pubDate>
+    <pubDate>Sun, 13 Jul 2025 14:59:31 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>使用flask_mail创建发送邮件接口</title>
+      <link>https://www.xhwv.cn/p/6c676f23.html</link>
+      <guid>https://www.xhwv.cn/p/6c676f23.html</guid>
+      <pubDate>Sun, 13 Jul 2025 12:32:04 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;flask_mail是一个轻量级的 Flask 扩展，用于在 Flask 应用中实现邮件发送功能。它集成了 Python 标准库中的 &lt;em&gt;smtplib&lt;/em&gt; 和 &lt;em&gt;email.mime&lt;/em&gt;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/categories/Flask%E5%AD%A6%E4%B9%A0/">Flask学习</category>
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Flask/">Flask</category>
+      
+      <category domain="https://www.xhwv.cn/tags/%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81/">邮件发送</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/6c676f23.html#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>多吉云api文件封装---python</title>
@@ -94,6 +123,8 @@
       
       
       
+      
+      <category domain="https://www.xhwv.cn/categories/Flask%E5%AD%A6%E4%B9%A0/">Flask学习</category>
       
       
       <category domain="https://www.xhwv.cn/tags/Flask/">Flask</category>
