@@ -1,0 +1,99 @@
+/* 倒计时容器样式 */
+.countdown-container {
+  margin-top: 2rem; /* 增加与上方内容的间距 */
+  padding-top: 1.5rem; /* 内部顶部间距 */
+  border-top: 1px solid var(--card-border-color); /* 顶部下划线 */
+  padding: 1.5rem 1rem 1rem; /* 调整内边距（上 右/左 下） */
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-box-shadow);
+  border: 1px solid var(--card-border-color);
+}
+
+/* 标题样式 */
+.countdown-header {
+  margin: 0 0 0.8rem 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* 倒计时数字区域 */
+.countdown-display {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+/* 每个时间单位（天/时/分/秒） */
+.countdown-item {
+  flex: 1;
+  padding: 0.3rem;
+  margin: 0 0.2rem;
+  background: var(--card-bg);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--theme-color);
+    color: white;
+  }
+
+  span {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--theme-color);
+    line-height: 1.2;
+  }
+}
+
+/* 时间单位标签（天/时/分/秒） */
+.countdown-label {
+  font-size: 0.7rem;
+  color: var(--text-color-secondary);
+  margin-top: 0.2rem;
+}
+
+/* 过期/到期时的特殊样式 */
+.countdown-expired {
+  color: #e74c3c !important;
+  font-weight: bold;
+  text-align: center;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 横排布局优化 */
+.card-announcement .countdown-display {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* 每个倒计时项（数字 + 标签） */
+.card-announcement .countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+/* 数字样式 */
+.card-announcement .countdown-item span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-highlight);
+}
+
+/* 标签样式 */
+.card-announcement .countdown-label {
+  font-size: 0.8rem;
+  color: var(--text-meta);
+}

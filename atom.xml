@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>胡摆摆的Blog</title>
+    <link>https://www.xhwv.cn/</link>
+    
+    <image>
+      <url>https://www.xhwv.cn/icon.png</url>
+      <title>胡摆摆的Blog</title>
+      <link>https://www.xhwv.cn/</link>
+    </image>
+    
+    <atom:link href="https://www.xhwv.cn/atom.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>胡摆摆的个人技术博客，分享编程经验、技术见解和生活感悟</description>
+    <pubDate>Wed, 10 Sep 2025 04:10:05 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>hexo_error</title>
+      <link>https://www.xhwv.cn/p/5322af7e.html</link>
+      <guid>https://www.xhwv.cn/p/5322af7e.html</guid>
+      <pubDate>Wed, 10 Sep 2025 04:08:53 GMT</pubDate>
+      
+      
+      
+      
+      
+      
+      <comments>https://www.xhwv.cn/p/5322af7e.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>2025typora最新破解教程</title>
+      <link>https://www.xhwv.cn/p/dabb0af1.html</link>
+      <guid>https://www.xhwv.cn/p/dabb0af1.html</guid>
+      <pubDate>Tue, 09 Sep 2025 15:10:16 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;2025Typora破解激活&quot;&gt;&lt;a href=&quot;#2025Typora破解激活&quot; class=&quot;headerlink&quot; title=&quot;2025Typora破解激活&quot;&gt;&lt;/a&gt;2025Typora破解激活&lt;/h1&gt;&lt;p&gt;首先到&lt;a</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Typora/">Typora</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/dabb0af1.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>2025解决Could not fork child process: Resource temporarily unavailable (-1).</title>
+      <link>https://www.xhwv.cn/p/6cf2a5d0.html</link>
+      <guid>https://www.xhwv.cn/p/6cf2a5d0.html</guid>
+      <pubDate>Wed, 03 Sep 2025 03:16:44 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;2025最新解决Resource-temporarily-unavailable&quot;&gt;&lt;a href=&quot;#2025最新解决Resource-temporarily-unavailable&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Git/">Git</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/6cf2a5d0.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Anaconda Navigator一直卡在加载页面，我来帮你解决</title>
+      <link>https://www.xhwv.cn/p/41b4311b.html</link>
+      <guid>https://www.xhwv.cn/p/41b4311b.html</guid>
+      <pubDate>Sat, 19 Jul 2025 07:16:53 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/anaconda/">anaconda</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/41b4311b.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>使用flask_mail创建发送邮件接口</title>
+      <link>https://www.xhwv.cn/p/6c676f23.html</link>
+      <guid>https://www.xhwv.cn/p/6c676f23.html</guid>
+      <pubDate>Sun, 13 Jul 2025 12:32:04 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;p&gt;flask_mail是一个轻量级的 Flask 扩展，用于在 Flask 应用中实现邮件发送功能。它集成了 Python 标准库中的 &lt;em&gt;smtplib&lt;/em&gt; 和 &lt;em&gt;email.mime&lt;/em&gt;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/categories/Flask%E5%AD%A6%E4%B9%A0/">Flask学习</category>
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Flask/">Flask</category>
+      
+      <category domain="https://www.xhwv.cn/tags/%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81/">邮件发送</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/6c676f23.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>多吉云api文件封装---python</title>
+      <link>https://www.xhwv.cn/p/f470ac5b.html</link>
+      <guid>https://www.xhwv.cn/p/f470ac5b.html</guid>
+      <pubDate>Mon, 30 Jun 2025 18:55:18 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;目录结构&quot;&gt;&lt;a href=&quot;#目录结构&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/categories/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96/">博客优化</category>
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Hexo/">Hexo</category>
+      
+      <category domain="https://www.xhwv.cn/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">自动化部署</category>
+      
+      <category domain="https://www.xhwv.cn/tags/Python%E8%84%9A%E6%9C%AC/">Python脚本</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/f470ac5b.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>从龟速到光速：Hexo博客访问速度太慢怎么办(Github Pages)？</title>
+      <link>https://www.xhwv.cn/p/870bf97.html</link>
+      <guid>https://www.xhwv.cn/p/870bf97.html</guid>
+      <pubDate>Sun, 29 Jun 2025 18:55:18 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;前言：当博客加载慢到能泡杯茶……&quot;&gt;&lt;a href=&quot;#前言：当博客加载慢到能泡杯茶……&quot; class=&quot;headerlink&quot; title=&quot;前言：当博客加载慢到能泡杯茶……&quot;&gt;&lt;/a&gt;前言：当博客加载慢到能泡杯茶……&lt;/h2&gt;&lt;p&gt;</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/categories/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96/">博客优化</category>
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Hexo/">Hexo</category>
+      
+      <category domain="https://www.xhwv.cn/tags/CDN%E5%8A%A0%E9%80%9F/">CDN加速</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/870bf97.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>用Flask快速搭建一个后端接口</title>
+      <link>https://www.xhwv.cn/p/7af8bbb3.html</link>
+      <guid>https://www.xhwv.cn/p/7af8bbb3.html</guid>
+      <pubDate>Thu, 26 Jun 2025 06:03:35 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;👋-嘿，想快速搭个Flask后端？跟我来！&quot;&gt;&lt;a href=&quot;#👋-嘿，想快速搭个Flask后端？跟我来！&quot; class=&quot;headerlink&quot; title=&quot;👋 嘿，想快速搭个Flask后端？跟我来！&quot;&gt;&lt;/a&gt;👋</description>
+          
+        
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/categories/Flask%E5%AD%A6%E4%B9%A0/">Flask学习</category>
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Flask/">Flask</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/7af8bbb3.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>NumPy 的使用</title>
+      <link>https://www.xhwv.cn/p/fc51d1ab.html</link>
+      <guid>https://www.xhwv.cn/p/fc51d1ab.html</guid>
+      <pubDate>Tue, 24 Jun 2025 07:51:19 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;Numpy&quot;&gt;&lt;a href=&quot;#Numpy&quot; class=&quot;headerlink&quot; title=&quot;Numpy&quot;&gt;&lt;/a&gt;Numpy&lt;/h1&gt;&lt;h3 id=&quot;一、核心概念：NumPy-数组（ndarray）&quot;&gt;&lt;a</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/Numpy/">Numpy</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/fc51d1ab.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>带你白嫖图床，图片引入失败？一分钟搞定</title>
+      <link>https://www.xhwv.cn/p/348804f6.html</link>
+      <guid>https://www.xhwv.cn/p/348804f6.html</guid>
+      <pubDate>Tue, 24 Jun 2025 01:30:05 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;引入外部图片方法&quot;&gt;&lt;a href=&quot;#引入外部图片方法&quot; class=&quot;headerlink&quot; title=&quot;引入外部图片方法&quot;&gt;&lt;/a&gt;引入外部图片方法&lt;/h1&gt;&lt;h3 id=&quot;无效的方法&quot;&gt;&lt;a href=&quot;#无效的方法&quot;</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/%E7%99%BD%E5%AB%96/">白嫖</category>
+      
+      <category domain="https://www.xhwv.cn/tags/%E5%9B%BE%E5%BA%8A/">图床</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/348804f6.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>Pandas的使用</title>
+      <link>https://www.xhwv.cn/p/c6ad9c96.html</link>
+      <guid>https://www.xhwv.cn/p/c6ad9c96.html</guid>
+      <pubDate>Sat, 21 Jun 2025 07:51:19 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;Pandas&quot;&gt;&lt;a href=&quot;#Pandas&quot; class=&quot;headerlink&quot; title=&quot;Pandas&quot;&gt;&lt;/a&gt;Pandas&lt;/h1&gt;&lt;p&gt;使用 &lt;a</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/pandas/">pandas</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/c6ad9c96.html#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>

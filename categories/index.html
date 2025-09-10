@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分类 | 胡摆摆的Blog</title><meta name="author" content="胡摆摆"><meta name="copyright" content="胡摆摆"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="「胡摆摆的Blog分类导航 | 📂 按主题归档全部文章： 层级清晰，快速定位你的兴趣领域！」">
+<meta property="og:type" content="website">
+<meta property="og:title" content="分类">
+<meta property="og:url" content="https://www.xhwv.cn/categories/index.html">
+<meta property="og:site_name" content="胡摆摆的Blog">
+<meta property="og:description" content="「胡摆摆的Blog分类导航 | 📂 按主题归档全部文章： 层级清晰，快速定位你的兴趣领域！」">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tc.xhwv.cn/hubb.jpg">
+<meta property="article:published_time" content="2025-06-21T07:50:36.000Z">
+<meta property="article:modified_time" content="2025-07-19T09:21:11.672Z">
+<meta property="article:author" content="胡摆摆">
+<meta property="article:tag" content="开发,编程,技术博客,胡摆摆,计算机科学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tc.xhwv.cn/hubb.jpg"><link rel="shortcut icon" href="https://tc.xhwv.cn/hubb.jpg"><link rel="canonical" href="https://www.xhwv.cn/categories/index.html"><link rel="preconnect" href="https://registry.npmmirror.com"/><meta name="baidu-site-verification" content="codeva-fWbrDM9sil"/><meta name="msvalidate.01" content="DE63423DD55950B8BF726E7A9AF2D0B0"/><meta name="360-site-verification" content="0c4a32dfaf22c71466aa14959d508510"/><meta name="sogou_site_verification" content="jsldV0IP3S"/><link rel="stylesheet" href="https://tc.xhwv.cn/css/index.css"><link rel="stylesheet" href="https://registry.npmmirror.com/@fortawesome/fontawesome-free/6.7.2/files/css/all.min.css"><link rel="stylesheet" href="https://tc.xhwv.cn/js/cdn/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"H28BV9VP2T","apiKey":"92546aa943009b49273020d7563d2dda","indexName":"HubaibaiBlog","hitsPerPage":6,"languages":{"input_placeholder":"搜索文章","hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，耗时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: 胡摆摆","link":"链接: ","source":"来源: 胡摆摆的Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'medium_zoom',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-center"},
+  infinitegrid: {
+    js: 'https://registry.npmmirror.com/@egjs/infinitegrid/4.12.0/files/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分类',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/font.css"><link rel="stylesheet" href="https://tc.xhwv.cn/css/countdown.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="胡摆摆的Blog" type="application/rss+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(https://tc.xhwv.cn/body_img.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://tc.xhwv.cn/hubb.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page type-categories" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url(https://tc.xhwv.cn/top_img.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">胡摆摆的Blog</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">分类</h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="category-lists"><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Flask%E5%AD%A6%E4%B9%A0/">Flask学习</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96/">博客优化</a><span class="category-list-count">2</span></li></ul></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://tc.xhwv.cn/hubb.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">胡摆摆</div><div class="author-info-description">热爱编程，喜欢折腾</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Hubaibai99"><i class="fab fa-github"></i><span>关注我</span></a><div class="card-info-social-icons"><a class="social-icon" href="/img/qq.jpg" target="_blank" title="QQ"><i class="iconfont icon-qq" style="color: #4a7dbe;"></i></a><a class="social-icon" href="mailto:211941596@qq.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="iconfont icon-youxiang" style="color: #4a7dbe;"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="iconfont icon-rss" style="color: #FF6600;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">哈喽这里是胡摆摆，接下来的目标是<strong style="color:red;font-size:20px">专升本</strong>！！！<br/>接下来会更新一些福建专升本的文化科和信息技术的笔记。</div><!-- 保持原有格式，仅调整条件判断的缩进--><div class="countdown-container announcement-countdown" data-target-date="2026-03-29 00:00:00"><div class="countdown-header">距离专升本：</div><div class="countdown-display"><div class="countdown-item"><span class="days">00</span><div class="countdown-label">天</div></div><div class="countdown-item"><span class="hours">00</span><div class="countdown-label">时</div></div><div class="countdown-item"><span class="minutes">00</span><div class="countdown-label">分</div></div><div class="countdown-item"><span class="seconds">00</span><div class="countdown-label">秒</div></div></div></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/5322af7e.html" title="hexo_error"><img src="https://tc.xhwv.cn/5dedz1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hexo_error"/ loading='lazy'></a><div class="content"><a class="title" href="/p/5322af7e.html" title="hexo_error">hexo_error</a><time datetime="2025-09-10T04:08:53.000Z" title="发表于 2025-09-10 12:08:53">2025-09-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/dabb0af1.html" title="2025typora最新破解教程"><img src="https://tc.xhwv.cn/articles/Typora/5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025typora最新破解教程"/ loading='lazy'></a><div class="content"><a class="title" href="/p/dabb0af1.html" title="2025typora最新破解教程">2025typora最新破解教程</a><time datetime="2025-09-09T15:10:16.000Z" title="发表于 2025-09-09 23:10:16">2025-09-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/6cf2a5d0.html" title="2025解决Could not fork child process: Resource temporarily unavailable (-1)."><img src="https://tc.xhwv.cn/articles/git_error/1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025解决Could not fork child process: Resource temporarily unavailable (-1)."/ loading='lazy'></a><div class="content"><a class="title" href="/p/6cf2a5d0.html" title="2025解决Could not fork child process: Resource temporarily unavailable (-1).">2025解决Could not fork child process: Resource temporarily unavailable (-1).</a><time datetime="2025-09-03T03:16:44.000Z" title="发表于 2025-09-03 11:16:44">2025-09-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/41b4311b.html" title="Anaconda Navigator一直卡在加载页面，我来帮你解决"><img src="https://tc.xhwv.cn/articles/anaconda/fm.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Anaconda Navigator一直卡在加载页面，我来帮你解决"/ loading='lazy'></a><div class="content"><a class="title" href="/p/41b4311b.html" title="Anaconda Navigator一直卡在加载页面，我来帮你解决">Anaconda Navigator一直卡在加载页面，我来帮你解决</a><time datetime="2025-07-19T07:16:53.000Z" title="发表于 2025-07-19 15:16:53">2025-07-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/6c676f23.html" title="使用flask_mail创建发送邮件接口"><img src="https://tc.xhwv.cn/n62d8q.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用flask_mail创建发送邮件接口"/ loading='lazy'></a><div class="content"><a class="title" href="/p/6c676f23.html" title="使用flask_mail创建发送邮件接口">使用flask_mail创建发送邮件接口</a><time datetime="2025-07-13T12:32:04.000Z" title="发表于 2025-07-13 20:32:04">2025-07-13</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Flask%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">Flask学习</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96/"><span class="card-category-list-name">博客优化</span><span class="card-category-list-count">2</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E7%99%BD%E5%AB%96/" style="font-size: 1.1em; color: #999">白嫖</a> <a href="/tags/pandas/" style="font-size: 1.1em; color: #999">pandas</a> <a href="/tags/%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81/" style="font-size: 1.1em; color: #999">邮件发送</a> <a href="/tags/Numpy/" style="font-size: 1.1em; color: #999">Numpy</a> <a href="/tags/Typora/" style="font-size: 1.1em; color: #999">Typora</a> <a href="/tags/Hexo/" style="font-size: 1.5em; color: #99a9bf">Hexo</a> <a href="/tags/Python%E8%84%9A%E6%9C%AC/" style="font-size: 1.1em; color: #999">Python脚本</a> <a href="/tags/%E5%9B%BE%E5%BA%8A/" style="font-size: 1.1em; color: #999">图床</a> <a href="/tags/CDN%E5%8A%A0%E9%80%9F/" style="font-size: 1.1em; color: #999">CDN加速</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/anaconda/" style="font-size: 1.1em; color: #999">anaconda</a> <a href="/tags/Flask/" style="font-size: 1.5em; color: #99a9bf">Flask</a> <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" style="font-size: 1.1em; color: #999">自动化部署</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/09/">
+            <span class="card-archive-list-date">
+              九月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/07/">
+            <span class="card-archive-list-date">
+              七月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/06/">
+            <span class="card-archive-list-date">
+              六月 2025
+            </span>
+            <span class="card-archive-list-count">5</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">11</div></div><div class="webinfo-item"><div class="item-name">运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2025-06-24T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">12.6k</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-09-10T04:11:32.029Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://tc.xhwv.cn/top_img.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2025 By 胡摆摆</div><div class="footer_custom_text"><div> <div>本站由 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.dogecloud.com/">多吉云</a> 提供CDN/云存储/IPv6链路服务</div> <div><a target="_blank" rel="noopener external nofollow noreferrer" href="https://beian.miit.gov.cn/?_t_=1739942294578#/Integrated/index"> <span>蜀ICP备2023020839号-1</span></a> </div> <div>本站已支持 IPv6 访问</div>
+</div></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://tc.xhwv.cn/js/utils.js"></script><script src="https://tc.xhwv.cn/js/main.js"></script><script async src="https://tc.xhwv.cn/js/cdn/medium-zoom.min.js"></script><script async src="https://tc.xhwv.cn/js/cdn/instantpage.min.js" type="module"></script><script async src="https://tc.xhwv.cn/js/cdn/snackbar.min.js"></script><div class="js-pjax"></div><script src="https://tc.xhwv.cn/js/countdown.js"></script><script id="canvas_nest" defer="defer" color="255,255,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://npm.elemecdn.com/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script id="click-show-text" src="https://registry.npmmirror.com/butterfly-extsrc/1.1.4/files/dist/click-show-text.min.js" data-mobile="false" data-text="学习,不要,摆烂,好好" data-fontsize="15px" data-random="false" async="async"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://registry.npmmirror.com/algoliasearch/5.20.3/files/dist/lite/builds/browser.umd.js"></script><script src="https://registry.npmmirror.com/instantsearch.js/4.77.3/files/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script></div></div></body></html>

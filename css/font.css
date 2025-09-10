@@ -1,0 +1,37 @@
+/* 阿里巴巴图标库 */
+@font-face {
+    font-family: "iconfont"; /* Project id 3795172 */
+    src: url('//at.alicdn.com/t/c/font_3795172_6hp27xdg2x7.woff2?t=1717673263031') format('woff2'),
+    url('//at.alicdn.com/t/c/font_3795172_6hp27xdg2x7.woff?t=1717673263031') format('woff'),
+    url('//at.alicdn.com/t/c/font_3795172_6hp27xdg2x7.ttf?t=1717673263031') format('truetype');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+}
+
+.iconfont:hover{
+    transform: rotate(365deg);
+}
+
+.icon-rss:before {
+    content: "\e62b";
+    color: #EE802F;
+}
+
+
+.icon-youxiang:before {
+    content: "\e6af";
+    color: #1078D4;
+}
+
+.icon-qq:before {
+    content: "\e60d";
+    color: rgb(16, 164, 255);
+}
+
