@@ -269,7 +269,7 @@
         
           
           
-      <description>&lt;h1 id=&quot;引入外部图片方法&quot;&gt;&lt;a href=&quot;#引入外部图片方法&quot; class=&quot;headerlink&quot; title=&quot;引入外部图片方法&quot;&gt;&lt;/a&gt;引入外部图片方法&lt;/h1&gt;&lt;h3 id=&quot;无效的方法&quot;&gt;&lt;a href=&quot;#无效的方法&quot;</description>
+      <description>&lt;h3 id=&quot;无效的方法&quot;&gt;&lt;a href=&quot;#无效的方法&quot; class=&quot;headerlink&quot; title=&quot;无效的方法&quot;&gt;&lt;/a&gt;无效的方法&lt;/h3&gt;&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</description>
           
         
       
@@ -296,7 +296,9 @@
         
           
           
-      <description>&lt;h1 id=&quot;Pandas&quot;&gt;&lt;a href=&quot;#Pandas&quot; class=&quot;headerlink&quot; title=&quot;Pandas&quot;&gt;&lt;/a&gt;Pandas&lt;/h1&gt;&lt;p&gt;使用 &lt;a</description>
+      <description>&lt;p&gt;使用 &lt;a href=&quot;https://www.kaggle.com/datasets/hashyamodhia/titanic&quot;&gt;泰坦尼克号乘客数据集&lt;/a&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;h3 id=&quot;理解-Pandas-的两大核心数据结构&quot;&gt;&lt;a</description>
           
         
       
