@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.xhwv.cn/p/dabb0af1.html</loc>
+    <loc>https://www.xhwv.cn/p/dd648764.html</loc>
     
     <lastmod>2025-10-16</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://www.xhwv.cn/p/dd648764.html</loc>
+    <loc>https://www.xhwv.cn/p/dabb0af1.html</loc>
     
     <lastmod>2025-10-16</lastmod>
     
@@ -146,14 +146,14 @@
 
   
   <url>
-    <loc>https://www.xhwv.cn/tags/Numpy/</loc>
+    <loc>https://www.xhwv.cn/tags/anaconda/</loc>
     <lastmod>2025-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.xhwv.cn/tags/anaconda/</loc>
+    <loc>https://www.xhwv.cn/tags/Git/</loc>
     <lastmod>2025-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -174,6 +174,13 @@
   </url>
   
   <url>
+    <loc>https://www.xhwv.cn/tags/Numpy/</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xhwv.cn/tags/Hexo/</loc>
     <lastmod>2025-10-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -182,13 +189,6 @@
   
   <url>
     <loc>https://www.xhwv.cn/tags/CDN%E5%8A%A0%E9%80%9F/</loc>
-    <lastmod>2025-10-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xhwv.cn/tags/Git/</loc>
     <lastmod>2025-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
