@@ -202,13 +202,6 @@
   </url>
   
   <url>
-    <loc>https://www.xhwv.cn/tags/%E9%AD%94%E7%99%BE%E7%9B%92/</loc>
-    <lastmod>2025-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xhwv.cn/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/</loc>
     <lastmod>2025-10-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -230,6 +223,20 @@
   </url>
   
   <url>
+    <loc>https://www.xhwv.cn/tags/%E9%AD%94%E7%99%BE%E7%9B%92/</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xhwv.cn/tags/Typora/</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.xhwv.cn/tags/%E7%99%BD%E5%AB%96/</loc>
     <lastmod>2025-10-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -238,13 +245,6 @@
   
   <url>
     <loc>https://www.xhwv.cn/tags/%E5%9B%BE%E5%BA%8A/</loc>
-    <lastmod>2025-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xhwv.cn/tags/Typora/</loc>
     <lastmod>2025-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
