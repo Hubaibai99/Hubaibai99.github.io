@@ -167,14 +167,14 @@
   </url>
   
   <url>
-    <loc>https://www.xhwv.cn/tags/Git/</loc>
+    <loc>https://www.xhwv.cn/tags/%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81/</loc>
     <lastmod>2025-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.xhwv.cn/tags/%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81/</loc>
+    <loc>https://www.xhwv.cn/tags/Git/</loc>
     <lastmod>2025-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -202,20 +202,6 @@
   </url>
   
   <url>
-    <loc>https://www.xhwv.cn/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.xhwv.cn/tags/Python%E8%84%9A%E6%9C%AC/</loc>
-    <lastmod>2025-10-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.xhwv.cn/tags/%E9%AD%94%E7%99%BE%E7%9B%92/</loc>
     <lastmod>2025-10-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -224,6 +210,20 @@
   
   <url>
     <loc>https://www.xhwv.cn/tags/pandas/</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xhwv.cn/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.xhwv.cn/tags/Python%E8%84%9A%E6%9C%AC/</loc>
     <lastmod>2025-10-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
