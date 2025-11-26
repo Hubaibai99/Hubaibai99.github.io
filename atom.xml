@@ -15,8 +15,65 @@
     <atom:link href="https://www.xhwv.cn/atom.xml" rel="self" type="application/rss+xml"/>
     
     <description>胡摆摆的个人技术博客，分享编程经验、技术见解和生活感悟</description>
-    <pubDate>Mon, 20 Oct 2025 12:44:31 GMT</pubDate>
+    <pubDate>Wed, 26 Nov 2025 13:19:46 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>Typora Markdown</title>
+      <link>https://www.xhwv.cn/p/674d724d.html</link>
+      <guid>https://www.xhwv.cn/p/674d724d.html</guid>
+      <pubDate>Wed, 26 Nov 2025 13:03:29 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;一、文本格式快捷键&quot;&gt;&lt;a href=&quot;#一、文本格式快捷键&quot; class=&quot;headerlink&quot; title=&quot;一、文本格式快捷键&quot;&gt;&lt;/a&gt;一、文本格式快捷键&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/markdwon/">markdwon</category>
+      
+      <category domain="https://www.xhwv.cn/tags/typora/">typora</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/674d724d.html#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>no conda environment selected解决办法</title>
+      <link>https://www.xhwv.cn/p/69e23ea.html</link>
+      <guid>https://www.xhwv.cn/p/69e23ea.html</guid>
+      <pubDate>Wed, 26 Nov 2025 08:17:52 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;报错no-conda-environment-selected&quot;&gt;&lt;a href=&quot;#报错no-conda-environment-selected&quot; class=&quot;headerlink&quot; title=&quot;报错no conda environment</description>
+          
+        
+      
+      
+      
+      
+      
+      <category domain="https://www.xhwv.cn/tags/pycharm/">pycharm</category>
+      
+      <category domain="https://www.xhwv.cn/tags/%E5%B0%8F%E9%97%AE%E9%A2%98/">小问题</category>
+      
+      
+      <comments>https://www.xhwv.cn/p/69e23ea.html#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>魔百盒CM211-1刷机(图文)(附资源包)</title>
