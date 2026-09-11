@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>时间戳转换器</title>
+<meta name="description" content="时间戳转换器：Unix 时间戳与日期时间互转，支持秒/毫秒自动识别、本地与 UTC，可一键复制与取当前时间。" />
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --text: #1a1d21;
+    --muted: #5c6570;
+    --line: #d9dee5;
+    --line-strong: #b8c0cb;
+    --primary: #1769e0;
+    --primary-soft: #e8f0fe;
+    --danger: #c62828;
+    --ok: #1b7f4c;
+    --radius: 8px;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .app {
+    width: min(480px, 100%);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+    overflow: hidden;
+  }
+  header {
+    padding: 20px 20px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  h1 {
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+  }
+  .sub {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  main { padding: 16px 20px 20px; display: grid; gap: 18px; }
+
+  .block {
+    display: grid;
+    gap: 8px;
+  }
+  .block-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .block-hint {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .label-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+  }
+
+  .row-controls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+  .row-controls.with-2 {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  input[type="text"],
+  input[type="datetime-local"] {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    outline: none;
+  }
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  input:focus-visible {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+  }
+  input.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+  }
+
+  button {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 44px;
+    padding: 0 14px;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  button:hover { background: #f3f5f8; }
+  button:active { background: #e8ecf1; }
+  button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  button.primary {
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  button.primary:hover { background: #1358c4; }
+  button.primary:active { background: #1049a5; }
+  button.ghost {
+    border-color: transparent;
+    background: transparent;
+    color: var(--muted);
+    min-height: 36px;
+    padding: 0 8px;
+    font-size: 13px;
+  }
+  button.ghost:hover {
+    color: var(--primary);
+    background: var(--primary-soft);
+  }
+
+  .seg {
+    display: inline-flex;
+    padding: 3px;
+    background: #eef1f5;
+    border-radius: var(--radius);
+    gap: 2px;
+  }
+  .seg button {
+    min-height: 38px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    padding: 0 14px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .seg button[aria-pressed="true"] {
+    background: #fff;
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+    font-weight: 600;
+  }
+  .seg button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 0;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .results {
+    display: grid;
+    gap: 6px;
+    padding-top: 4px;
+    border-top: 1px solid var(--line);
+  }
+  .result {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 8px;
+    align-items: center;
+    min-height: 44px;
+  }
+  .result .k {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .result .v {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 8px 10px;
+    background: #f6f8fa;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .result button { min-height: 36px; padding: 0 10px; font-size: 13px; }
+
+  .status {
+    font-size: 13px;
+    color: var(--muted);
+    min-height: 1.4em;
+  }
+  .status.err { color: var(--danger); }
+  .status.ok { color: var(--ok); }
+
+  footer {
+    padding: 0 20px 16px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 420px) {
+    body { padding: 12px; }
+    .row-controls.with-2 { grid-template-columns: 1fr 1fr; }
+    .row-controls.with-2 input { grid-column: 1 / -1; }
+    .result { grid-template-columns: 56px 1fr; }
+    .result button { grid-column: 2; justify-self: start; }
+    button, input { min-height: 48px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>时间戳转换器</h1>
+      <p class="sub">Unix 时间戳 ⇄ 日期时间 · 秒 / 毫秒</p>
+    </header>
+
+    <main>
+      <section class="block">
+        <div class="label-row">
+          <span class="block-title">时间戳 → 日期</span>
+          <span class="block-hint" id="unitHint">自动识别秒 / 毫秒</span>
+        </div>
+        <div class="row-controls with-2">
+          <input id="ts" type="text" inputmode="numeric" autocomplete="off"
+                 spellcheck="false" placeholder="1710000000 或 1710000000000"
+                 aria-label="时间戳" />
+          <button type="button" id="nowTs">现在</button>
+          <button type="button" class="primary" id="tsToDate">转换</button>
+        </div>
+        <div class="seg" role="group" aria-label="时间戳单位">
+          <button type="button" id="unitAuto" aria-pressed="true">自动</button>
+          <button type="button" id="unitSec" aria-pressed="false">秒</button>
+          <button type="button" id="unitMs" aria-pressed="false">毫秒</button>
+        </div>
+      </section>
+
+      <div class="divider">或</div>
+
+      <section class="block">
+        <div class="label-row">
+          <span class="block-title">日期 → 时间戳</span>
+          <span class="block-hint">本机时区</span>
+        </div>
+        <div class="row-controls with-2">
+          <input id="dt" type="datetime-local" step="1" aria-label="日期时间" />
+          <button type="button" id="nowDt">现在</button>
+          <button type="button" class="primary" id="dtToTs">转换</button>
+        </div>
+      </section>
+
+      <section class="results" aria-live="polite" aria-label="转换结果">
+        <div class="result">
+          <span class="k">秒</span>
+          <span class="v" id="outSec">—</span>
+          <button type="button" class="ghost" data-copy="outSec">复制</button>
+        </div>
+        <div class="result">
+          <span class="k">毫秒</span>
+          <span class="v" id="outMs">—</span>
+          <button type="button" class="ghost" data-copy="outMs">复制</button>
+        </div>
+        <div class="result">
+          <span class="k">本地</span>
+          <span class="v" id="outLocal">—</span>
+          <button type="button" class="ghost" data-copy="outLocal">复制</button>
+        </div>
+        <div class="result">
+          <span class="k">ISO</span>
+          <span class="v" id="outIso">—</span>
+          <button type="button" class="ghost" data-copy="outIso">复制</button>
+        </div>
+        <div class="result">
+          <span class="k">UTC</span>
+          <span class="v" id="outUtc">—</span>
+          <button type="button" class="ghost" data-copy="outUtc">复制</button>
+        </div>
+        <div class="result">
+          <span class="k">相对</span>
+          <span class="v" id="outRel">—</span>
+          <button type="button" class="ghost" data-copy="outRel">复制</button>
+        </div>
+      </section>
+
+      <p class="status" id="status">已填入当前时间，可直接修改后转换。</p>
+    </main>
+
+    <footer>10 位为秒，13 位为毫秒；自动模式按位数判断。Enter 也可转换。</footer>
+  </div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const tsInput = $("ts");
+  const dtInput = $("dt");
+  const statusEl = $("status");
+  const unitHint = $("unitHint");
+  const unitBtns = { auto: $("unitAuto"), sec: $("unitSec"), ms: $("unitMs") };
+  let unit = "auto";
+  const outs = {
+    sec: $("outSec"), ms: $("outMs"), local: $("outLocal"),
+    iso: $("outIso"), utc: $("outUtc"), rel: $("outRel"),
+  };
+
+  function setStatus(msg, kind) {
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (kind ? " " + kind : "");
+  }
+
+  function setUnit(next) {
+    unit = next;
+    Object.entries(unitBtns).forEach(([k, el]) => {
+      el.setAttribute("aria-pressed", String(k === next));
+    });
+    unitHint.textContent =
+      next === "auto" ? "自动识别秒 / 毫秒" :
+      next === "sec" ? "按秒解析" : "按毫秒解析";
+  }
+
+  function clearOutputs() {
+    Object.values(outs).forEach((el) => { el.textContent = "—"; });
+  }
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  function formatLocal(d) {
+    return (
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ` +
+      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.` +
+      `${String(d.getMilliseconds()).padStart(3, "0")}`
+    );
+  }
+
+  function formatUtc(d) {
+    return (
+      `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ` +
+      `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`
+    );
+  }
+
+  function relative(ms) {
+    const diff = Date.now() - ms;
+    const abs = Math.abs(diff);
+    if (abs < 45000) return diff >= 0 ? "刚刚" : "马上";
+    const sec = Math.round(abs / 1000);
+    const suffix = diff >= 0 ? "前" : "后";
+    for (const [size, name] of [[86400, "天"], [3600, "时"], [60, "分"]]) {
+      if (sec >= size) return `${Math.floor(sec / size)}${name}${suffix}`;
+    }
+    return `${sec}秒${suffix}`;
+  }
+
+  function toDatetimeLocalValue(d) {
+    return (
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T` +
+      `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+    );
+  }
+
+  function fromDatetimeLocalValue(value) {
+    const m = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/);
+    if (!m) return null;
+    const [, y, mo, d, h, mi, s] = m;
+    return new Date(Number(y), Number(mo) - 1, Number(d), Number(h), Number(mi), Number(s || 0), 0);
+  }
+
+  function resolveMsFromTs(raw) {
+    const text = raw.trim().replace(/[\s,_]/g, "");
+    if (!text) return { error: "请输入时间戳" };
+    if (!/^[+-]?\d+$/.test(text)) return { error: "时间戳应为整数数字" };
+    let value = Number(text);
+    if (!Number.isFinite(value)) return { error: "数值无效" };
+    const digits = text.replace(/^[+-]/, "").length;
+    let mode = unit;
+    if (mode === "auto") {
+      if (digits <= 10) mode = "sec";
+      else if (digits <= 16) mode = "ms";
+      else return { error: "位数过长，无法判断秒 / 毫秒" };
+    }
+    if (mode === "sec") value *= 1000;
+    return { ms: value, mode };
+  }
+
+  function renderMs(ms, note) {
+    const d = new Date(ms);
+    if (Number.isNaN(d.getTime())) {
+      clearOutputs();
+      tsInput.classList.add("invalid");
+      dtInput.classList.add("invalid");
+      setStatus("时间超出可表示范围", "err");
+      return false;
+    }
+    tsInput.classList.remove("invalid");
+    dtInput.classList.remove("invalid");
+    const sec = Math.floor(ms / 1000);
+    outs.sec.textContent = String(sec);
+    outs.ms.textContent = String(ms);
+    outs.local.textContent = formatLocal(d);
+    outs.iso.textContent = d.toISOString();
+    outs.utc.textContent = formatUtc(d);
+    outs.rel.textContent = relative(ms);
+    dtInput.value = toDatetimeLocalValue(d);
+    setStatus(note || "已转换", "ok");
+    return true;
+  }
+
+  function convertFromTs() {
+    const r = resolveMsFromTs(tsInput.value);
+    if (r.error) {
+      clearOutputs();
+      tsInput.classList.add("invalid");
+      setStatus(r.error, "err");
+      return;
+    }
+    renderMs(r.ms, `已按${r.mode === "sec" ? "秒" : "毫秒"}解析`);
+  }
+
+  function convertFromDt() {
+    if (!dtInput.value) {
+      clearOutputs();
+      setStatus("请选择日期时间", "err");
+      return;
+    }
+    const d = fromDatetimeLocalValue(dtInput.value);
+    if (!d || Number.isNaN(d.getTime())) {
+      clearOutputs();
+      dtInput.classList.add("invalid");
+      setStatus("日期时间格式无效", "err");
+      return;
+    }
+    tsInput.value = String(d.getTime());
+    renderMs(d.getTime(), "已由日期时间转换");
+  }
+
+  function fillNowTs() {
+    tsInput.classList.remove("invalid");
+    tsInput.value = String(Date.now());
+    convertFromTs();
+  }
+
+  function fillNowDt() {
+    dtInput.classList.remove("invalid");
+    const now = new Date();
+    dtInput.value = toDatetimeLocalValue(now);
+    tsInput.value = String(now.getTime());
+    renderMs(now.getTime(), "已填入当前时间");
+  }
+
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  $("tsToDate").addEventListener("click", convertFromTs);
+  $("dtToTs").addEventListener("click", convertFromDt);
+  $("nowTs").addEventListener("click", fillNowTs);
+  $("nowDt").addEventListener("click", fillNowDt);
+
+  Object.entries(unitBtns).forEach(([k, el]) => {
+    el.addEventListener("click", () => setUnit(k));
+  });
+
+  tsInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); convertFromTs(); }
+  });
+  dtInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); convertFromDt(); }
+  });
+  tsInput.addEventListener("input", () => tsInput.classList.remove("invalid"));
+  dtInput.addEventListener("input", () => dtInput.classList.remove("invalid"));
+
+  document.querySelectorAll("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const el = document.getElementById(btn.getAttribute("data-copy"));
+      const text = el ? el.textContent.trim() : "";
+      if (!text || text === "—") {
+        setStatus("没有可复制的内容", "err");
+        return;
+      }
+      const ok = await copyText(text);
+      setStatus(ok ? `已复制：${text}` : "复制失败，请手动选择", ok ? "ok" : "err");
+      if (ok) {
+        const prev = btn.textContent;
+        btn.textContent = "已复制";
+        setTimeout(() => { btn.textContent = prev; }, 1200);
+      }
+    });
+  });
+
+  fillNowTs();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>二维码工具</title>
+<meta name="description" content="本地二维码工具：生成文字/链接二维码并导出 PNG，或上传图片解码；纠错等级 L/M/Q/H 标明可遮盖比例，纯浏览器处理不上传。" />
+<style>
+  :root {
+    --bg: #f0f3f7;
+    --surface: #ffffff;
+    --text: #15202b;
+    --muted: #5b6b7c;
+    --line: #d5dde6;
+    --line-strong: #b7c3d0;
+    --accent: #3b5bdb;
+    --accent-soft: #e8edfb;
+    --ok: #0f7b4c;
+    --danger: #c62828;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px 14px 40px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .app {
+    width: min(520px, 100%);
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(21, 32, 43, 0.04), 0 8px 24px rgba(21, 32, 43, 0.05);
+    overflow: hidden;
+  }
+  header.card {
+    padding: 18px 16px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  h1 { font-size: 18px; font-weight: 650; letter-spacing: 0.02em; }
+  .sub { width: 100%; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .tag {
+    font-size: 11px;
+    color: var(--ok);
+    border: 1px solid rgba(15, 123, 76, 0.3);
+    background: rgba(15, 123, 76, 0.08);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  main.card { padding: 16px; display: grid; gap: 14px; }
+
+  .field { display: grid; gap: 8px; }
+  .label-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+  }
+  label { font-size: 13px; font-weight: 600; }
+  .hint { font-size: 12px; color: var(--muted); }
+
+  textarea {
+    width: 100%;
+    min-height: 96px;
+    resize: vertical;
+    padding: 10px 12px;
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    outline: none;
+  }
+  textarea:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  textarea.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .seg {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 3px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    gap: 2px;
+  }
+  .seg.full { width: 100%; }
+  .seg button {
+    flex: 1;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 38px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .seg button[aria-pressed="true"] {
+    background: #fff;
+    color: var(--accent);
+    box-shadow: 0 1px 2px rgba(21, 32, 43, 0.08);
+    font-weight: 600;
+  }
+  .seg button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+  }
+
+  .ctl {
+    display: grid;
+    grid-template-columns: 56px 1fr 44px;
+    gap: 10px;
+    align-items: center;
+  }
+  .ctl .val {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-align: right;
+    color: var(--text);
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--accent);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+  input[type="range"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .color-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .color-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  input[type="color"] {
+    width: 40px;
+    height: 36px;
+    padding: 2px;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+  button {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    color: var(--text);
+    cursor: pointer;
+  }
+  button:hover:not(:disabled) { background: #f5f7fa; }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  button.primary:hover:not(:disabled) { filter: brightness(1.05); background: var(--accent); }
+  button.ghost {
+    background: transparent;
+    color: var(--muted);
+    border-color: transparent;
+    min-height: 40px;
+    font-size: 13px;
+    padding: 0 12px;
+  }
+  button.ghost:hover:not(:disabled) { color: var(--text); background: var(--bg); }
+
+  .preview-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: #f7f9fc;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    min-height: 220px;
+    max-width: 100%;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .preview-box > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .mode-bar {
+    display: flex;
+    padding: 3px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    gap: 2px;
+  }
+  .mode-bar button {
+    flex: 1;
+    min-height: 40px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .mode-bar button[aria-pressed="true"] {
+    background: #fff;
+    color: var(--accent);
+    box-shadow: 0 1px 2px rgba(21, 32, 43, 0.08);
+    font-weight: 600;
+  }
+  .mode-bar button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+  }
+  .drop-dec {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--radius);
+    background: #f7f9fc;
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .drop-dec:hover, .drop-dec:focus-visible, .drop-dec.dragover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    outline: none;
+  }
+  .drop-dec strong { display: block; font-size: 15px; margin-bottom: 4px; }
+  .drop-dec span { font-size: 12px; color: var(--muted); }
+  .drop-dec input { display: none; }
+  .dec-img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+    box-shadow: 0 1px 4px rgba(21, 32, 43, 0.08);
+  }
+  .preview-box canvas {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    max-height: 320px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(21, 32, 43, 0.08);
+  }
+  .result-box {
+    width: 100%;
+    min-height: 88px;
+    padding: 10px 12px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    resize: vertical;
+    outline: none;
+  }
+  .result-box:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .result-box:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+  }
+  .drop-dec input {
+    display: none;
+  }
+  .preview-box canvas {
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(21, 32, 43, 0.08);
+  }
+  .preview-box .empty {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    padding: 40px 16px;
+  }
+
+  .meta-line {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+  .status { font-size: 13px; color: var(--muted); min-height: 1.4em; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--danger); }
+
+  footer {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  @media (max-width: 420px) {
+    .row2 { grid-template-columns: 1fr; }
+    .actions { grid-template-columns: 1fr; }
+    button { min-height: 48px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="card">
+      <div>
+        <h1>二维码工具</h1>
+        <p class="sub">本地生成与解码 · 文字 / 链接 / 图片 · 不上传服务器</p>
+      </div>
+      <span class="tag">仅本地处理</span>
+    </header>
+
+    <main class="card">
+      <div class="mode-bar" role="group" aria-label="模式">
+        <button type="button" data-mode="gen" aria-pressed="true">生成</button>
+        <button type="button" data-mode="dec" aria-pressed="false">解码</button>
+      </div>
+
+      <div id="genPanel">
+      <div class="field">
+        <div class="label-row">
+          <label for="text">内容</label>
+          <span class="hint" id="lenHint">0 字符</span>
+        </div>
+        <textarea id="text" placeholder="粘贴网址、文字或任意内容…" spellcheck="false"></textarea>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <div class="label-row">
+            <label>纠错等级</label>
+            <span class="hint" id="ecHint">可遮约 15% · 平衡之选</span>
+          </div>
+          <div class="seg full" role="group" aria-label="纠错等级">
+            <button type="button" data-ec="L" aria-pressed="false" title="可遮约 7%，码更小">L 7%</button>
+            <button type="button" data-ec="M" aria-pressed="true" title="可遮约 15%，默认">M 15%</button>
+            <button type="button" data-ec="Q" aria-pressed="false" title="可遮约 25%，耐脏污">Q 25%</button>
+            <button type="button" data-ec="H" aria-pressed="false" title="可遮约 30%，码更大更密">H 30%</button>
+          </div>
+        </div>
+        <div class="field">
+          <div class="label-row"><label for="pixelSize">边长</label></div>
+          <div class="ctl">
+            <span class="hint">px</span>
+            <input type="range" id="pixelSize" min="128" max="1024" step="16" value="256" />
+            <span class="val" id="pixelSizeVal">256</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="color-row">
+        <label class="color-item">前景 <input type="color" id="fg" value="#111111" /></label>
+        <label class="color-item">背景 <input type="color" id="bg" value="#ffffff" /></label>
+        <button type="button" class="ghost" id="swapColors">反转</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="primary" id="download" disabled>下载 PNG</button>
+        <button type="button" class="ghost" id="clear">清空</button>
+      </div>
+
+      <div class="preview-box" id="previewBox">
+        <span class="empty">输入内容后自动生成二维码</span>
+      </div>
+
+      <p class="meta-line" id="metaLine">版本 — · 容量 —</p>
+      <p class="status" id="status">扫码工具纯本地运算，适合链接、Wi-Fi 备注、表单预填等。</p>
+      </div>
+
+      <div id="decPanel" hidden>
+        <div class="drop-dec" id="decDrop" tabindex="0" role="button" aria-label="选择二维码图片">
+          <strong>点击选择，或拖入二维码图片</strong>
+          <span>支持 PNG / JPG / WebP 等浏览器可解码格式</span>
+          <input type="file" id="decFile" accept="image/*" />
+        </div>
+
+        <div class="preview-box" id="decPreview" style="margin-top:12px;">
+          <span class="empty">待识别的图片</span>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <div class="label-row">
+            <label for="decResult">解码结果</label>
+            <button type="button" class="ghost" id="copyResult" disabled>复制</button>
+          </div>
+          <textarea class="result-box" id="decResult" readonly data-placeholder="解码后显示在这里"></textarea>
+        </div>
+
+        <p class="status" id="decStatus" style="margin-top:10px;">上传清晰、正对的二维码识别率最高；倾斜过大可能失败。</p>
+      </div>
+    </main>
+
+    <footer>处理全部在本机浏览器完成，内容不会离开这台设备。</footer>
+  </div>
+<script>
+(() => {
+  // —— QR encoder (byte mode, versions 1–15) ——
+  // Per-block ECC codewords (ISO/IEC 18004)
+  const ECC_CODEWORDS_PER_BLOCK = {
+    1: [7, 10, 13, 17],
+    2: [10, 16, 22, 28],
+    3: [15, 26, 18, 22],
+    4: [20, 18, 26, 16],
+    5: [26, 24, 18, 22],
+    6: [18, 16, 24, 28],
+    7: [20, 18, 18, 26],
+    8: [24, 22, 22, 26],
+    9: [30, 22, 20, 24],
+    10: [18, 26, 24, 28],
+    11: [20, 30, 28, 24],
+    12: [24, 22, 26, 28],
+    13: [26, 22, 24, 22],
+    14: [30, 24, 20, 24],
+    15: [22, 24, 30, 24],
+  };
+  // Number of blocks per EC level [L, M, Q, H]
+  const NUM_EC_BLOCKS = {
+    1: [1, 1, 1, 1],
+    2: [1, 1, 1, 1],
+    3: [1, 1, 2, 2],
+    4: [1, 2, 2, 4],
+    5: [1, 2, 2, 2],
+    6: [2, 4, 4, 4],
+    7: [2, 4, 6, 5],
+    8: [2, 4, 6, 6],
+    9: [2, 5, 8, 8],
+    10: [4, 5, 8, 8],
+    11: [4, 6, 10, 8],
+    12: [4, 8, 10, 10],
+    13: [4, 9, 12, 12],
+    14: [4, 9, 16, 13],
+    15: [6, 10, 12, 15],
+  };
+  // total codewords per version (data + ecc)
+  const TOTAL_CODEWORDS = {
+    1: 26, 2: 44, 3: 70, 4: 100, 5: 134, 6: 172, 7: 196, 8: 242,
+    9: 292, 10: 346, 11: 404, 12: 466, 13: 532, 14: 581, 15: 655,
+  };
+  const EC_INDEX = { L: 0, M: 1, Q: 2, H: 3 };
+  // ISO 18004 format-info EC indicator (NOT the same as table order!)
+  const EC_FORMAT = { L: 1, M: 0, Q: 3, H: 2 };
+
+  function encodeUtf8(str) {
+    if (typeof TextEncoder !== "undefined") return new TextEncoder().encode(str);
+    const out = [];
+    for (let i = 0; i < str.length; i++) {
+      let c = str.codePointAt(i);
+      if (c > 0xffff) i++;
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) {
+        out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+      } else if (c < 0x10000) {
+        out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+      } else {
+        out.push(0xf0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+      }
+    }
+    return new Uint8Array(out);
+  }
+
+  function dataCapacityCodewords(version, ec) {
+    const total = TOTAL_CODEWORDS[version];
+    const ecc = ECC_CODEWORDS_PER_BLOCK[version][EC_INDEX[ec]] * NUM_EC_BLOCKS[version][EC_INDEX[ec]];
+    return total - ecc;
+  }
+
+  function dataCapacityBits(version, ec) {
+    return dataCapacityCodewords(version, ec) * 8;
+  }
+
+  function chooseVersion(byteLen, ec) {
+    // byte mode overhead: 4 mode + 8 length (v1-9) or 16 (v10+)
+    for (let v = 1; v <= 15; v++) {
+      const lenBits = v <= 9 ? 8 : 16;
+      const need = 4 + lenBits + byteLen * 8;
+      if (need <= dataCapacityBits(v, ec)) return v;
+    }
+    return -1;
+  }
+
+  // GF(256) for Reed-Solomon
+  const EXP = new Uint8Array(512);
+  const LOG = new Uint8Array(256);
+  (function initGf() {
+    let x = 1;
+    for (let i = 0; i < 255; i++) {
+      EXP[i] = x;
+      LOG[x] = i;
+      x <<= 1;
+      if (x & 0x100) x ^= 0x11d;
+    }
+    for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  })();
+
+  function gfMul(a, b) {
+    if (a === 0 || b === 0) return 0;
+    return EXP[LOG[a] + LOG[b]];
+  }
+
+  function rsGenerator(degree) {
+    // monic generator: product of (x - α^i)
+    let poly = new Uint8Array([1]);
+    for (let i = 0; i < degree; i++) {
+      const next = new Uint8Array(poly.length + 1);
+      for (let j = 0; j < poly.length; j++) {
+        next[j] ^= poly[j];
+        next[j + 1] ^= gfMul(poly[j], EXP[i]);
+      }
+      poly = next;
+    }
+    return poly;
+  }
+
+  function rsEncode(data, ecLen) {
+    const gen = rsGenerator(ecLen);
+    const res = new Uint8Array(ecLen);
+    for (let i = 0; i < data.length; i++) {
+      const factor = data[i] ^ res[0];
+      res.copyWithin(0, 1);
+      res[ecLen - 1] = 0;
+      if (factor !== 0) {
+        for (let j = 0; j < ecLen; j++) {
+          res[j] ^= gfMul(gen[j + 1], factor);
+        }
+      }
+    }
+    return res;
+  }
+
+  function buildBitBuffer(bytes, version) {
+    const bits = [];
+    const push = (val, len) => {
+      for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1);
+    };
+    push(0b0100, 4); // byte mode
+    push(bytes.length, version <= 9 ? 8 : 16);
+    for (let i = 0; i < bytes.length; i++) push(bytes[i], 8);
+    const capacity = dataCapacityBits(version, "M"); // placeholder; real capacity set by caller
+    return bits;
+  }
+
+  function makeDataCodewords(bytes, version, ec) {
+    const capacityBits = dataCapacityBits(version, ec);
+    const bits = [];
+    const push = (val, len) => {
+      for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1);
+    };
+    push(0b0100, 4);
+    push(bytes.length, version <= 9 ? 8 : 16);
+    for (let i = 0; i < bytes.length; i++) push(bytes[i], 8);
+    // terminator
+    const term = Math.min(4, capacityBits - bits.length);
+    push(0, term);
+    // byte align
+    while (bits.length % 8 !== 0) bits.push(0);
+    const dataCw = dataCapacityCodewords(version, ec);
+    const cw = new Uint8Array(dataCw);
+    for (let i = 0; i < bits.length; i += 8) {
+      let b = 0;
+      for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j];
+      cw[i >> 3] = b;
+    }
+    // pad
+    const padBytes = [0xec, 0x11];
+    let pi = 0;
+    for (let i = bits.length >> 3; i < dataCw; i++) {
+      cw[i] = padBytes[pi++ % 2];
+    }
+    return cw;
+  }
+
+  function interleave(data, version, ec) {
+    const ecIdx = EC_INDEX[ec];
+    const numBlocks = NUM_EC_BLOCKS[version][ecIdx];
+    const eccPer = ECC_CODEWORDS_PER_BLOCK[version][ecIdx];
+    const totalCw = TOTAL_CODEWORDS[version];
+    const totalData = dataCapacityCodewords(version, ec);
+    const shortBlockLen = Math.floor(totalData / numBlocks);
+    const numLong = totalData % numBlocks;
+    // Long blocks come first (ISO)
+    const blocksData = [];
+    let offset = 0;
+    for (let i = 0; i < numLong; i++) {
+      blocksData.push(data.subarray(offset, offset + shortBlockLen + 1));
+      offset += shortBlockLen + 1;
+    }
+    for (let i = numLong; i < numBlocks; i++) {
+      blocksData.push(data.subarray(offset, offset + shortBlockLen));
+      offset += shortBlockLen;
+    }
+    const eccBlocks = blocksData.map((b) => rsEncode(b, eccPer));
+    const out = [];
+    const maxDataLen = shortBlockLen + (numLong > 0 ? 1 : 0);
+    for (let i = 0; i < maxDataLen; i++) {
+      for (let b = 0; b < numBlocks; b++) {
+        if (i < blocksData[b].length) out.push(blocksData[b][i]);
+      }
+    }
+    for (let i = 0; i < eccPer; i++) {
+      for (let b = 0; b < numBlocks; b++) out.push(eccBlocks[b][i]);
+    }
+    while (out.length < totalCw) out.push(0);
+    return new Uint8Array(out.slice(0, totalCw));
+  }
+
+  function alignmentPositions(version) {
+    if (version === 1) return [];
+    const size = version * 4 + 17;
+    const numAlign = Math.floor(version / 7) + 2;
+    const step = version === 32
+      ? 26
+      : Math.floor((version * 4 + numAlign * 2 + 1) / (numAlign * 2 - 2)) * 2;
+    const result = new Array(numAlign);
+    result[0] = 6;
+    let pos = size - 7;
+    for (let i = numAlign - 1; i >= 1; i--) {
+      result[i] = pos;
+      pos -= step;
+    }
+    return result;
+  }
+
+  function makeMatrix(version, codewords) {
+    const size = version * 4 + 17;
+    const modules = Array.from({ length: size }, () => new Array(size).fill(false));
+    const reserved = Array.from({ length: size }, () => new Array(size).fill(false));
+
+    const setF = (r, c, dark) => {
+      if (r < 0 || c < 0 || r >= size || c >= size) return;
+      modules[r][c] = dark;
+      reserved[r][c] = true;
+    };
+
+    // finder + separators
+    function drawFinder(r0, c0) {
+      for (let r = -1; r <= 7; r++) {
+        for (let c = -1; c <= 7; c++) {
+          const rr = r0 + r;
+          const cc = c0 + c;
+          if (rr < 0 || cc < 0 || rr >= size || cc >= size) continue;
+          const dark =
+            (r >= 0 && r <= 6 && (c === 0 || c === 6)) ||
+            (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
+            (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+          setF(rr, cc, dark);
+        }
+      }
+    }
+    drawFinder(0, 0);
+    drawFinder(0, size - 7);
+    drawFinder(size - 7, 0);
+
+    // timing
+    for (let i = 0; i < size; i++) {
+      if (!reserved[6][i]) setF(6, i, i % 2 === 0);
+      if (!reserved[i][6]) setF(i, 6, i % 2 === 0);
+    }
+
+    // alignment
+    const aligns = alignmentPositions(version);
+    for (let i = 0; i < aligns.length; i++) {
+      for (let j = 0; j < aligns.length; j++) {
+        const r = aligns[i];
+        const c = aligns[j];
+        // skip finder corners
+        if ((r === 6 && c === 6) || (r === 6 && c === size - 7) || (r === size - 7 && c === 6)) {
+          continue;
+        }
+        for (let dr = -2; dr <= 2; dr++) {
+          for (let dc = -2; dc <= 2; dc++) {
+            const dark = Math.max(Math.abs(dr), Math.abs(dc)) !== 1;
+            setF(r + dr, c + dc, dark);
+          }
+        }
+      }
+    }
+
+    // dark module
+    setF(size - 8, 8, true);
+
+    // reserve format info areas
+    for (let i = 0; i < 9; i++) {
+      if (!reserved[8][i]) reserved[8][i] = true;
+      if (!reserved[i][8]) reserved[i][8] = true;
+    }
+    for (let i = 0; i < 8; i++) {
+      reserved[8][size - 1 - i] = true;
+      reserved[size - 1 - i][8] = true;
+    }
+
+    // version info for v>=7
+    if (version >= 7) {
+      const vBits = versionBits(version);
+      for (let i = 0; i < 18; i++) {
+        const bit = ((vBits >> i) & 1) === 1;
+        const a = size - 11 + (i % 3);
+        const b = Math.floor(i / 3);
+        setF(b, a, bit);
+        setF(a, b, bit);
+        reserved[b][a] = true;
+        reserved[a][b] = true;
+      }
+    }
+
+    // place data bits in zigzag (Nayuki-style column direction)
+    let bitIdx = 0;
+    const allBits = [];
+    for (let i = 0; i < codewords.length; i++) {
+      for (let b = 7; b >= 0; b--) allBits.push((codewords[i] >>> b) & 1);
+    }
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      const upward = ((right + 1) & 2) === 0;
+      for (let vert = 0; vert < size; vert++) {
+        for (let j = 0; j < 2; j++) {
+          const c = right - j;
+          const row = upward ? size - 1 - vert : vert;
+          if (reserved[row][c]) continue;
+          modules[row][c] = bitIdx < allBits.length ? allBits[bitIdx] === 1 : false;
+          bitIdx++;
+        }
+      }
+    }
+
+    return { modules, size, reserved };
+  }
+
+  function versionBits(version) {
+    let rem = version;
+    for (let i = 0; i < 12; i++) {
+      rem = (rem << 1) ^ ((rem >>> 11) * 0x1f25);
+    }
+    return (version << 12) | rem;
+  }
+
+  function formatBits(ec, mask) {
+    const data = (EC_FORMAT[ec] << 3) | mask;
+    let rem = data;
+    for (let i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+    return ((data << 10) | rem) ^ 0x5412;
+  }
+
+  function applyMask(modules, reserved, mask) {
+    const size = modules.length;
+    const out = modules.map((row) => row.slice());
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (reserved[r][c]) continue;
+        let invert = false;
+        switch (mask) {
+          case 0: invert = (r + c) % 2 === 0; break;
+          case 1: invert = r % 2 === 0; break;
+          case 2: invert = c % 3 === 0; break;
+          case 3: invert = (r + c) % 3 === 0; break;
+          case 4: invert = (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0; break;
+          case 5: invert = ((r * c) % 2) + ((r * c) % 3) === 0; break;
+          case 6: invert = (((r * c) % 2) + ((r * c) % 3)) % 2 === 0; break;
+          case 7: invert = (((r + c) % 2) + ((r * c) % 3)) % 2 === 0; break;
+        }
+        if (invert) out[r][c] = !out[r][c];
+      }
+    }
+    return out;
+  }
+
+  function placeFormat(modules, ec, mask) {
+    const size = modules.length;
+    const bits = formatBits(ec, mask);
+    const getBit = (i) => ((bits >> i) & 1) === 1;
+    // first copy (around top-left finder)
+    for (let i = 0; i <= 5; i++) modules[i][8] = getBit(i);
+    modules[7][8] = getBit(6);
+    modules[8][8] = getBit(7);
+    modules[8][7] = getBit(8);
+    for (let i = 9; i < 15; i++) modules[8][14 - i] = getBit(i);
+    // second copy
+    for (let i = 0; i < 8; i++) modules[8][size - 1 - i] = getBit(i);
+    for (let i = 8; i < 15; i++) modules[size - 15 + i][8] = getBit(i);
+    modules[size - 8][8] = true;
+  }
+
+  function penaltyScore(matrix) {
+    const size = matrix.length;
+    let score = 0;
+    // rule 1: adjacent
+    for (let r = 0; r < size; r++) {
+      let run = 1;
+      for (let c = 1; c < size; c++) {
+        if (matrix[r][c] === matrix[r][c - 1]) run++;
+        else {
+          if (run >= 5) score += 3 + (run - 5);
+          run = 1;
+        }
+      }
+      if (run >= 5) score += 3 + (run - 5);
+    }
+    for (let c = 0; c < size; c++) {
+      let run = 1;
+      for (let r = 1; r < size; r++) {
+        if (matrix[r][c] === matrix[r - 1][c]) run++;
+        else {
+          if (run >= 5) score += 3 + (run - 5);
+          run = 1;
+        }
+      }
+      if (run >= 5) score += 3 + (run - 5);
+    }
+    // rule 2: 2x2
+    for (let r = 0; r < size - 1; r++) {
+      for (let c = 0; c < size - 1; c++) {
+        const v = matrix[r][c];
+        if (v === matrix[r][c + 1] && v === matrix[r + 1][c] && v === matrix[r + 1][c + 1]) {
+          score += 3;
+        }
+      }
+    }
+    // rule 3: finder-like
+    const pat1 = [true, false, true, true, true, false, true, false, false, false, false];
+    const pat2 = [false, false, false, false, true, false, true, true, true, false, true];
+    const match = (get) => {
+      for (let i = 0; i + 11 <= size; i++) {
+        let ok1 = true;
+        let ok2 = true;
+        for (let j = 0; j < 11; j++) {
+          if (get(i + j) !== pat1[j]) ok1 = false;
+          if (get(i + j) !== pat2[j]) ok2 = false;
+        }
+        if (ok1 || ok2) score += 40;
+      }
+    };
+    for (let r = 0; r < size; r++) match((i) => matrix[r][i]);
+    for (let c = 0; c < size; c++) match((i) => matrix[i][c]);
+    // rule 4: dark ratio
+    let dark = 0;
+    for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (matrix[r][c]) dark++;
+    const pct = (dark * 100) / (size * size);
+    score += Math.floor(Math.abs(pct - 50) / 5) * 10;
+    return score;
+  }
+
+  function generateQrMatrix(text, ec) {
+    const bytes = encodeUtf8(text);
+    const version = chooseVersion(bytes.length, ec);
+    if (version < 0) throw new Error("内容过长：当前纠错等级放不下，请改用 L/M 或缩短内容");
+    const data = makeDataCodewords(bytes, version, ec);
+    const interleaved = interleave(data, version, ec);
+    const base = makeMatrix(version, interleaved);
+
+    let best = null;
+    let bestScore = Infinity;
+    let bestMask = 0;
+    for (let mask = 0; mask < 8; mask++) {
+      const masked = applyMask(base.modules, base.reserved, mask);
+      placeFormat(masked, ec, mask);
+      const score = penaltyScore(masked);
+      if (score < bestScore) {
+        bestScore = score;
+        best = masked;
+        bestMask = mask;
+      }
+    }
+    return { modules: best, size: base.size, version, mask: bestMask };
+  }
+
+  // —— UI ——
+  const $ = (id) => document.getElementById(id);
+  const textEl = $("text");
+  const ecSeg = document.querySelectorAll("[data-ec]");
+  const pixelSize = $("pixelSize");
+  const pixelSizeVal = $("pixelSizeVal");
+  const fgInput = $("fg");
+  const bgInput = $("bg");
+  const swapBtn = $("swapColors");
+  const downloadBtn = $("download");
+  const clearBtn = $("clear");
+  const previewBox = $("previewBox");
+  const metaLine = $("metaLine");
+  const statusEl = $("status");
+  const lenHint = $("lenHint");
+
+  let ec = "M";
+  let lastCanvas = null;
+  let debounceTimer = null;
+  let busy = false;
+
+  function setStatus(msg, kind) {
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (kind ? " " + kind : "");
+  }
+
+  const ecHint = $("ecHint");
+  const EC_HINTS = {
+    L: "可遮约 7% · 码最小",
+    M: "可遮约 15% · 平衡之选",
+    Q: "可遮约 25% · 耐脏污",
+    H: "可遮约 30% · 码更大更密",
+  };
+
+  function setEc(next) {
+    ec = next;
+    ecSeg.forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-ec") === next));
+    });
+    if (ecHint) ecHint.textContent = EC_HINTS[next] || "";
+    scheduleRender();
+  }
+
+  function charLen(s) {
+    try { return [...s].length; } catch { return s.length; }
+  }
+
+  function drawQr(result, sizePx) {
+    const canvas = document.createElement("canvas");
+    const quiet = 4;
+    const n = result.size + quiet * 2;
+    const scale = Math.max(1, Math.floor(sizePx / n));
+    const canvasSize = scale * n;
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = bgInput.value;
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
+    ctx.fillStyle = fgInput.value;
+    for (let r = 0; r < result.size; r++) {
+      for (let c = 0; c < result.size; c++) {
+        if (result.modules[r][c]) {
+          ctx.fillRect((c + quiet) * scale, (r + quiet) * scale, scale, scale);
+        }
+      }
+    }
+    return canvas;
+  }
+
+  function showCanvas(canvas) {
+    previewBox.innerHTML = "";
+    previewBox.appendChild(canvas);
+    lastCanvas = canvas;
+    downloadBtn.disabled = false;
+  }
+
+  function showEmpty(msg) {
+    previewBox.innerHTML = "";
+    const span = document.createElement("span");
+    span.className = "empty";
+    span.textContent = msg || "输入内容后自动生成二维码";
+    previewBox.appendChild(span);
+    lastCanvas = null;
+    downloadBtn.disabled = true;
+    metaLine.textContent = "版本 — · 容量 —";
+  }
+
+  function render() {
+    if (busy) return;
+    const text = textEl.value;
+    lenHint.textContent = charLen(text) + " 字符";
+    pixelSizeVal.textContent = pixelSize.value;
+
+    if (!text.trim()) {
+      textEl.classList.remove("invalid");
+      showEmpty();
+      setStatus("输入内容后自动生成二维码。");
+      return;
+    }
+
+    busy = true;
+    try {
+      const result = generateQrMatrix(text, ec);
+      const canvas = drawQr(result, Number(pixelSize.value));
+      showCanvas(canvas);
+      textEl.classList.remove("invalid");
+      const cap = dataCapacityCodewords(result.version, ec);
+      metaLine.textContent = `版本 ${result.version} · 掩码 ${result.mask} · 纠错 ${ec} · 容量约 ${cap} 字节`;
+      setStatus("已生成，可下载 PNG。", "ok");
+    } catch (e) {
+      textEl.classList.add("invalid");
+      showEmpty("无法生成");
+      metaLine.textContent = "版本 — · 容量 —";
+      setStatus(e && e.message ? e.message : "生成失败", "err");
+    } finally {
+      busy = false;
+    }
+  }
+
+  function scheduleRender() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(render, 180);
+  }
+
+  ecSeg.forEach((btn) => {
+    btn.addEventListener("click", () => setEc(btn.getAttribute("data-ec")));
+  });
+  textEl.addEventListener("input", scheduleRender);
+  pixelSize.addEventListener("input", () => {
+    pixelSizeVal.textContent = pixelSize.value;
+    scheduleRender();
+  });
+  fgInput.addEventListener("input", scheduleRender);
+  bgInput.addEventListener("input", scheduleRender);
+  swapBtn.addEventListener("click", () => {
+    const fg = fgInput.value;
+    fgInput.value = bgInput.value;
+    bgInput.value = fg;
+    scheduleRender();
+  });
+  clearBtn.addEventListener("click", () => {
+    textEl.value = "";
+    textEl.classList.remove("invalid");
+    showEmpty();
+    setStatus("已清空。");
+    lenHint.textContent = "0 字符";
+    textEl.focus();
+  });
+  downloadBtn.addEventListener("click", () => {
+    if (!lastCanvas) return;
+    const a = document.createElement("a");
+    a.href = lastCanvas.toDataURL("image/png");
+    a.download = "qrcode.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setStatus("已下载 qrcode.png", "ok");
+  });
+
+  // seed example
+  textEl.value = "https://example.com";
+  render();
+
+  // —— Decode UI + local decoder ——
+  const modeBtns = document.querySelectorAll("[data-mode]");
+  const genPanel = $("genPanel");
+  const decPanel = $("decPanel");
+  const decDrop = $("decDrop");
+  const decFile = $("decFile");
+  const decPreview = $("decPreview");
+  const decResult = $("decResult");
+  const decStatus = $("decStatus");
+  const copyResult = $("copyResult");
+  let decUrl = null;
+  let decToken = 0;
+  let decTimer = null;
+
+  function setDecStatus(msg, kind) {
+    decStatus.textContent = msg;
+    decStatus.className = "status" + (kind ? " " + kind : "");
+  }
+
+  function setMode(next) {
+    modeBtns.forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-mode") === next));
+    });
+    genPanel.hidden = next !== "gen";
+    decPanel.hidden = next !== "dec";
+  }
+
+  modeBtns.forEach((btn) => {
+    btn.addEventListener("click", () => setMode(btn.getAttribute("data-mode")));
+  });
+
+  function showDecImage(img) {
+    if (decUrl) { URL.revokeObjectURL(decUrl); decUrl = null; }
+    decPreview.innerHTML = "";
+    if (typeof img === "string") {
+      const el = document.createElement("img");
+      el.className = "dec-img";
+      el.alt = "待识别二维码";
+      el.src = img;
+      decPreview.appendChild(el);
+    } else {
+      decPreview.appendChild(img);
+    }
+  }
+
+  function bytesToUtf8(bytes) {
+    try {
+      return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+    } catch {
+      let s = "";
+      for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+      return s;
+    }
+  }
+
+  function parseQrCodewords(codewords) {
+    const bits = [];
+    for (let i = 0; i < codewords.length; i++) {
+      for (let b = 7; b >= 0; b--) bits.push((codewords[i] >>> b) & 1);
+    }
+    let bi = 0;
+    const take = (n) => {
+      let v = 0;
+      for (let i = 0; i < n; i++) {
+        v = (v << 1) | (bits[bi++] || 0);
+      }
+      return v;
+    };
+    const out = [];
+    while (bi + 4 <= bits.length) {
+      const mode = take(4);
+      if (mode === 0) break;
+      if (mode === 7) { // ECI
+        const first = take(8);
+        if ((first & 0x80) === 0) { /* 1-byte ECI */ }
+        else if ((first & 0xc0) === 0x80) take(8);
+        else if ((first & 0xe0) === 0xc0) take(16);
+        continue;
+      }
+      if (mode === 1 || mode === 2) {
+        // numeric / alphanumeric — limited support
+        const lenBits = mode === 1 ? 10 : 9;
+        const len = take(lenBits);
+        if (mode === 1) {
+          let rest = len;
+          let s = "";
+          while (rest >= 3) { s += String(take(10)); rest -= 3; }
+          if (rest === 2) s += String(take(7));
+          else if (rest === 1) s += String(take(4));
+          out.push(s);
+        } else {
+          const AL = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+          let s = "";
+          for (let i = 0; i < len; i++) {
+            const v = take(11);
+            s += AL[Math.floor(v / 45)] + AL[v % 45];
+          }
+          out.push(s);
+        }
+        continue;
+      }
+      if (mode === 4) { // byte
+        const v9 = versionForDecode;
+        const lenBits = v9 <= 9 ? 8 : 16;
+        const len = take(lenBits);
+        const data = new Uint8Array(len);
+        for (let i = 0; i < len; i++) data[i] = take(8);
+        out.push(bytesToUtf8(data));
+        continue;
+      }
+      if (mode === 8) { // kanji — skip
+        const len = take(8);
+        bi += len * 13;
+        continue;
+      }
+      break;
+    }
+    return out.join("");
+  }
+
+  function tryRsCorrect(block, ecLen, version, ec) {
+    // If syndromes are zero, data is intact
+    const syndromes = new Uint8Array(ecLen);
+    let hasError = false;
+    for (let i = 0; i < ecLen; i++) {
+      let s = 0;
+      for (let j = 0; j < block.length; j++) {
+        s = gfMul(s, EXP[i]) ^ block[j];
+      }
+      syndromes[i] = s;
+      if (s !== 0) hasError = true;
+    }
+    if (!hasError) return block.slice(0, block.length - ecLen);
+
+    // Minimal RS: Berlekamp-Massey + Forney (cap error count)
+    const n = block.length;
+    const msg = block.slice();
+    // syndromes already computed as S_i = r(α^i)
+    // Build error locator
+    let sigma = new Uint8Array(1);
+    sigma[0] = 1;
+    let old = new Uint8Array(1);
+    old[0] = 1;
+    let L = 0;
+    let m = 1;
+    let b = 1;
+    for (let i = 0; i < ecLen; i++) {
+      let delta = syndromes[i];
+      for (let j = 1; j <= L; j++) {
+        delta ^= gfMul(sigma[j] || 0, syndromes[i - j]);
+      }
+      if (delta === 0) {
+        m++;
+      } else if (2 * L <= i) {
+        const T = sigma.slice();
+        const scale = gfMul(delta, EXP[255 - LOG[b] % 255] || 0);
+        // inverse of b
+        const invB = b === 0 ? 0 : EXP[255 - LOG[b]];
+        const coef = gfMul(delta, invB);
+        const shift = new Uint8Array(sigma.length + m);
+        for (let k = 0; k < sigma.length; k++) {
+          shift[k + m] = gfMul(sigma[k], coef) ^ (T[k + m] || 0);
+          if (k + m < sigma.length) {
+            // handled
+          }
+        }
+        // simpler: sigma = T - coef * x^m * sigma
+        const maxLen = Math.max(sigma.length, m + old.length);
+        const next = new Uint8Array(maxLen);
+        for (let k = 0; k < sigma.length; k++) next[k] ^= sigma[k];
+        for (let k = 0; k < old.length; k++) {
+          next[k + m] ^= gfMul(coef, old[k]);
+        }
+        // Use old as previous sigma for BM when L updates... standard BM uses previous
+        sigma = next;
+        L = i + 1 - L;
+        old = T;
+        b = delta;
+        m = 1;
+      } else {
+        const invB = b === 0 ? 0 : EXP[255 - LOG[b]];
+        const coef = gfMul(delta, invB);
+        const maxLen = Math.max(sigma.length, m + old.length);
+        const next = new Uint8Array(maxLen);
+        for (let k = 0; k < sigma.length; k++) next[k] ^= sigma[k];
+        for (let k = 0; k < old.length; k++) {
+          next[k + m] ^= gfMul(coef, old[k]);
+        }
+        sigma = next;
+        m++;
+      }
+    }
+
+    // Chien search for roots
+    const errPos = [];
+    for (let i = 0; i < n; i++) {
+      // evaluate sigma at α^{-i}
+      let xi = 1;
+      const invA = EXP[255 - (i % 255)];
+      let sum = 0;
+      for (let j = 0; j < sigma.length; j++) {
+        sum ^= gfMul(sigma[j], xi);
+        xi = gfMul(xi, invA);
+      }
+      if (sum === 0) errPos.push(n - 1 - i);
+    }
+
+    if (errPos.length === 0 || errPos.length > Math.floor(ecLen / 2)) {
+      // cannot correct — return data part raw
+      return msg.slice(0, n - ecLen);
+    }
+
+    // Forney: omega = (syndrome poly * sigma) mod x^ecLen
+    // Simplified: for each error location, compute magnitude
+    // X_i = α^{n-1-pos} ... use standard formulas carefully
+    // Fallback: flip using estimated magnitudes
+    try {
+      // syndrome poly S(x)
+      // For small errors use direct solve when possible
+      const k = errPos.length;
+      // Vandermonde system for magnitudes
+      // S_{i} = sum e_j * X_j^i
+      // X_j = α^{pos_from_right?}
+      // Position pos in block: coeff of x^{n-1-pos}
+      const X = errPos.map((p) => EXP[(p) % 255]); // may need adjustment
+      // Build matrix A[i][j] = X_j^i
+      const A = [];
+      for (let i = 0; i < k; i++) {
+        const row = new Uint8Array(k);
+        for (let j = 0; j < k; j++) {
+          row[j] = EXP[(LOG[X[j] || 1] * i) % 255];
+        }
+        A.push(row);
+      }
+      const S = Array.from(syndromes.slice(0, k));
+      // Gaussian elimination in GF
+      const aug = A.map((row, i) => {
+        const r = new Uint8Array(k + 1);
+        r.set(row);
+        r[k] = S[i];
+        return r;
+      });
+      for (let col = 0; col < k; col++) {
+        let piv = -1;
+        for (let r = col; r < k; r++) {
+          if (aug[r][col] !== 0) { piv = r; break; }
+        }
+        if (piv < 0) return msg.slice(0, n - ecLen);
+        [aug[col], aug[piv]] = [aug[piv], aug[col]];
+        const inv = EXP[255 - LOG[aug[col][col]]];
+        for (let c = col; c <= k; c++) aug[col][c] = gfMul(aug[col][c], inv);
+        for (let r = 0; r < k; r++) {
+          if (r === col) continue;
+          const f = aug[r][col];
+          if (!f) continue;
+          for (let c = col; c <= k; c++) {
+            aug[r][c] ^= gfMul(f, aug[col][c]);
+          }
+        }
+      }
+      for (let i = 0; i < k; i++) {
+        const pos = errPos[i];
+        if (pos >= 0 && pos < n) msg[pos] ^= aug[i][k];
+      }
+      return msg.slice(0, n - ecLen);
+    } catch {
+      return msg.slice(0, n - ecLen);
+    }
+  }
+
+  function deinterleaveToBlocks(allCw, version, ec) {
+    const ecIdx = EC_INDEX[ec];
+    const numBlocks = NUM_EC_BLOCKS[version][ecIdx];
+    const eccPer = ECC_CODEWORDS_PER_BLOCK[version][ecIdx];
+    const totalData = dataCapacityCodewords(version, ec);
+    const shortBlockLen = Math.floor(totalData / numBlocks);
+    const numLong = totalData % numBlocks;
+    const blocksData = [];
+    const eccBlocks = [];
+    for (let i = 0; i < numBlocks; i++) {
+      const len = shortBlockLen + (i < numLong ? 1 : 0);
+      blocksData.push(new Uint8Array(len));
+      eccBlocks.push(new Uint8Array(eccPer));
+    }
+    // interleave data: long first
+    let idx = 0;
+    const maxDataLen = shortBlockLen + (numLong > 0 ? 1 : 0);
+    for (let i = 0; i < maxDataLen; i++) {
+      for (let b = 0; b < numBlocks; b++) {
+        if (i < blocksData[b].length) blocksData[b][i] = allCw[idx++];
+      }
+    }
+    for (let i = 0; i < eccPer; i++) {
+      for (let b = 0; b < numBlocks; b++) {
+        eccBlocks[b][i] = allCw[idx++];
+      }
+    }
+    return { blocksData, eccBlocks, shortBlockLen, numLong };
+  }
+
+  let versionForDecode = 1;
+
+  function extractDataFromMatrix(modules, version, ec, mask) {
+    const size = modules.length;
+    // build reserved map for data area
+    const reserved = Array.from({ length: size }, () => new Array(size).fill(false));
+    const mark = (r, c) => {
+      if (r >= 0 && c >= 0 && r < size && c < size) reserved[r][c] = true;
+    };
+    // finders + separators
+    for (let r = 0; r <= 8; r++) for (let c = 0; c <= 8; c++) mark(r, c);
+    for (let r = 0; r <= 8; r++) for (let c = size - 8; c < size; c++) mark(r, c);
+    for (let r = size - 8; r < size; r++) for (let c = 0; c <= 8; c++) mark(r, c);
+    // timing
+    for (let i = 0; i < size; i++) { mark(6, i); mark(i, 6); }
+    // alignment
+    const aligns = alignmentPositions(version);
+    for (let i = 0; i < aligns.length; i++) {
+      for (let j = 0; j < aligns.length; j++) {
+        const r = aligns[i];
+        const c = aligns[j];
+        if ((r === 6 && c === 6) || (r === 6 && c === size - 7) || (r === size - 7 && c === 6)) continue;
+        for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) mark(r + dr, c + dc);
+      }
+    }
+    // dark module
+    mark(size - 8, 8);
+    // version info
+    if (version >= 7) {
+      for (let i = 0; i < 18; i++) {
+        const a = size - 11 + (i % 3);
+        const b = Math.floor(i / 3);
+        mark(b, a);
+        mark(a, b);
+      }
+    }
+
+    // unmask + read bits in same zigzag as encoder
+    const bits = [];
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      const upward = ((right + 1) & 2) === 0;
+      for (let vert = 0; vert < size; vert++) {
+        for (let j = 0; j < 2; j++) {
+          const c = right - j;
+          const row = upward ? size - 1 - vert : vert;
+          if (reserved[row][c]) continue;
+          let dark = modules[row][c];
+          // apply inverse mask
+          let invert = false;
+          switch (mask) {
+            case 0: invert = (row + c) % 2 === 0; break;
+            case 1: invert = row % 2 === 0; break;
+            case 2: invert = c % 3 === 0; break;
+            case 3: invert = (row + c) % 3 === 0; break;
+            case 4: invert = (Math.floor(row / 2) + Math.floor(c / 3)) % 2 === 0; break;
+            case 5: invert = ((row * c) % 2) + ((row * c) % 3) === 0; break;
+            case 6: invert = (((row * c) % 2) + ((row * c) % 3)) % 2 === 0; break;
+            case 7: invert = (((row + c) % 2) + ((row * c) % 3)) % 2 === 0; break;
+          }
+          if (invert) dark = !dark;
+          bits.push(dark ? 1 : 0);
+        }
+      }
+    }
+    const totalCw = TOTAL_CODEWORDS[version];
+    const cw = new Uint8Array(totalCw);
+    for (let i = 0; i < totalCw; i++) {
+      let b = 0;
+      for (let j = 0; j < 8; j++) b = (b << 1) | (bits[i * 8 + j] || 0);
+      cw[i] = b;
+    }
+
+    const { blocksData, eccBlocks, shortBlockLen, numLong } = deinterleaveToBlocks(cw, version, ec);
+    const dataParts = [];
+    for (let i = 0; i < blocksData.length; i++) {
+      const full = new Uint8Array(blocksData[i].length + eccBlocks[i].length);
+      full.set(blocksData[i], 0);
+      full.set(eccBlocks[i], blocksData[i].length);
+      const corrected = tryRsCorrect(full, eccBlocks[i].length, version, ec);
+      dataParts.push(corrected);
+    }
+    let dataLen = 0;
+    dataParts.forEach((p) => { dataLen += p.length; });
+    const data = new Uint8Array(dataLen);
+    let o = 0;
+    dataParts.forEach((p) => { data.set(p, o); o += p.length; });
+    versionForDecode = version;
+    return parseQrCodewords(data);
+  }
+
+  function readFormat(modules) {
+    // try both format copies
+    const size = modules.length;
+    let bits = 0;
+    // copy1
+    for (let i = 0; i <= 5; i++) bits |= (modules[i][8] ? 1 : 0) << i;
+    bits |= (modules[7][8] ? 1 : 0) << 6;
+    bits |= (modules[8][8] ? 1 : 0) << 7;
+    bits |= (modules[8][7] ? 1 : 0) << 8;
+    for (let i = 9; i < 15; i++) bits |= (modules[8][14 - i] ? 1 : 0) << i;
+    bits ^= 0x5412;
+    const data = bits >> 10;
+    const rem = bits & 0x3ff;
+    // quick BCH check optional
+    const ecBits = (data >> 3) & 3;
+    const mask = data & 7;
+    // ISO format-info: 00=M, 01=L, 10=H, 11=Q
+    const ecMap = ["M", "L", "H", "Q"];
+    return { ec: ecMap[ecBits], mask };
+  }
+
+  function decodeBitMatrix(modules, size) {
+    // estimate version from size
+    const version = (size - 17) / 4;
+    if (!Number.isInteger(version) || version < 1 || version > 15) {
+      throw new Error("无法识别二维码尺寸");
+    }
+    const fmt = readFormat(modules);
+    return extractDataFromMatrix(modules, version, fmt.ec, fmt.mask);
+  }
+
+  function binarize(imageData) {
+    const { data, width, height } = imageData;
+    const gray = new Uint8Array(width * height);
+    for (let i = 0, p = 0; i < gray.length; i++, p += 4) {
+      gray[i] = (data[p] * 77 + data[p + 1] * 150 + data[p + 2] * 29) >> 8;
+    }
+    // Otsu
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
+    const total = gray.length;
+    let sum = 0;
+    for (let i = 0; i < 256; i++) sum += i * hist[i];
+    let sumB = 0;
+    let wB = 0;
+    let best = 0;
+    let thresh = 128;
+    for (let t = 0; t < 256; t++) {
+      wB += hist[t];
+      if (!wB) continue;
+      const wF = total - wB;
+      if (!wF) break;
+      sumB += t * hist[t];
+      const mB = sumB / wB;
+      const mF = (sum - sumB) / wF;
+      const between = wB * wF * (mB - mF) * (mB - mF);
+      if (between > best) {
+        best = between;
+        thresh = t;
+      }
+    }
+    const bw = new Uint8Array(width * height);
+    for (let i = 0; i < gray.length; i++) bw[i] = gray[i] > thresh ? 1 : 0; // 1 = light
+    return { bw, width, height };
+  }
+
+  function findFinderCenters(bw, width, height) {
+    const isDark = (x, y) => {
+      if (x < 0 || y < 0 || x >= width || y >= height) return 0;
+      return bw[y * width + x] === 0 ? 1 : 0; // 0 in bw = dark
+    };
+
+    function scanLine(get, len) {
+      const hits = [];
+      let i = 0;
+      while (i < len) {
+        // skip light (get===0)
+        while (i < len && get(i) === 0) i++;
+        if (i >= len) break;
+        const start = i;
+        // dark
+        while (i < len && get(i) === 1) i++;
+        const dark = i - start;
+        const s2 = i; while (i < len && get(i) === 0) i++; const light = i - s2;
+        const s3 = i; while (i < len && get(i) === 1) i++; const dark2 = i - s3;
+        const s4 = i; while (i < len && get(i) === 0) i++; const light2 = i - s4;
+        const s5 = i; while (i < len && get(i) === 1) i++; const dark3 = i - s5;
+        if (dark > 0 && light > 0 && dark2 >= 2 && light2 > 0 && dark3 > 0) {
+          const total = dark + light + dark2 + light2 + dark3;
+          const parts = [dark, light, dark2, light2, dark3];
+          const target = [1, 1, 3, 1, 1];
+          let ok = true;
+          for (let k = 0; k < 5; k++) {
+            const exp = (total * target[k]) / 7;
+            if (Math.abs(parts[k] - exp) > Math.max(1.2, total * 0.1)) { ok = false; break; }
+          }
+          if (ok) {
+            const midStart = start + dark + light;
+            const center = midStart + dark2 / 2;
+            hits.push({ pos: center, size: dark2 / 3 });
+          }
+        }
+      }
+      return hits;
+    }
+
+    // collect candidates from rows and cols
+    const cands = [];
+    for (let y = 0; y < height; y++) {
+      const hits = scanLine((x) => isDark(x, y), width);
+      for (const h of hits) cands.push({ x: h.pos, y, size: h.size, axis: "h" });
+    }
+    for (let x = 0; x < width; x++) {
+      const hits = scanLine((y) => isDark(x, y), height);
+      for (const h of hits) cands.push({ x, y: h.pos, size: h.size, axis: "v" });
+    }
+    if (!cands.length) return [];
+
+    // 2D grid clustering
+    const used = new Array(cands.length).fill(false);
+    const raw = [];
+    for (let i = 0; i < cands.length; i++) {
+      if (used[i]) continue;
+      const group = [cands[i]];
+      used[i] = true;
+      for (let j = i + 1; j < cands.length; j++) {
+        if (used[j]) continue;
+        const tol = Math.max(5, (cands[i].size + cands[j].size) * 1.8);
+        if (Math.abs(cands[j].x - cands[i].x) < tol && Math.abs(cands[j].y - cands[i].y) < tol) {
+          group.push(cands[j]);
+          used[j] = true;
+        }
+      }
+      if (group.length < 3) continue;
+      const gx = group.reduce((s, p) => s + p.x, 0) / group.length;
+      const gy = group.reduce((s, p) => s + p.y, 0) / group.length;
+      const gsz = group.reduce((s, p) => s + p.size, 0) / group.length;
+      raw.push({ x: gx, y: gy, size: gsz, n: group.length });
+    }
+
+    // snap to best 7x7 alignment nearby
+    const centers = [];
+    for (const c of raw) {
+      let best = null;
+      let bestScore = -1;
+      for (let dy = -c.size * 0.6; dy <= c.size * 0.6; dy += 0.5) {
+        for (let dx = -c.size * 0.6; dx <= c.size * 0.6; dx += 0.5) {
+          const sc = finderScore(bw, width, height, c.x + dx, c.y + dy, c.size);
+          if (sc > bestScore) {
+            bestScore = sc;
+            best = { x: c.x + dx, y: c.y + dy, size: c.size };
+          }
+        }
+      }
+      if (best && bestScore >= 0.88) {
+        centers.push({ x: best.x, y: best.y, size: best.size });
+      }
+    }
+    // dedupe close centers
+    const dedup = [];
+    for (const c of centers) {
+      const near = dedup.find((d) => Math.hypot(d.x - c.x, d.y - c.y) < c.size * 2.5);
+      if (!near) dedup.push(c);
+    }
+    return dedup;
+  }
+
+  function finderScore(bw, width, height, cx, cy, size) {
+    const ms = size;
+    if (ms < 1.5) return 0;
+    let score = 0;
+    let total = 0;
+    for (let r = 0; r < 7; r++) {
+      for (let c = 0; c < 7; c++) {
+        const px = Math.round(cx + (c - 3.5) * ms);
+        const py = Math.round(cy + (r - 3.5) * ms);
+        if (px < 0 || py < 0 || px >= width || py >= height) continue;
+        const dark = bw[py * width + px] === 0;
+        const expect =
+          r === 0 || r === 6 || c === 0 || c === 6 ||
+          (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+        total++;
+        if (dark === expect) score++;
+      }
+    }
+    for (let r = -1; r <= 7; r++) {
+      for (let c = -1; c <= 7; c++) {
+        if (r >= 0 && r <= 6 && c >= 0 && c <= 6) continue;
+        const px = Math.round(cx + (c - 3.5) * ms);
+        const py = Math.round(cy + (r - 3.5) * ms);
+        if (px < 0 || py < 0 || px >= width || py >= height) continue;
+        const dark = bw[py * width + px] === 0;
+        total++;
+        if (!dark) score++;
+      }
+    }
+    return total ? score / total : 0;
+  }
+
+  function sampleMatrix(bw, width, height, corners, version) {
+    const size = version * 4 + 17;
+    const modules = Array.from({ length: size }, () => new Array(size).fill(false));
+    const tl = corners.tl;
+    const tr = corners.tr;
+    const bl = corners.bl;
+    const distModules = size - 7;
+    const vx = { x: (tr.x - tl.x) / distModules, y: (tr.y - tl.y) / distModules };
+    const vy = { x: (bl.x - tl.x) / distModules, y: (bl.y - tl.y) / distModules };
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        // module (r,c) center relative to finder center (3.5, 3.5)
+        const mx = (c + 0.5) - 3.5;
+        const my = (r + 0.5) - 3.5;
+        const px = tl.x + vx.x * mx + vy.x * my;
+        const py = tl.y + vx.y * mx + vy.y * my;
+        const ix = Math.round(px);
+        const iy = Math.round(py);
+        if (ix < 0 || iy < 0 || ix >= width || iy >= height) {
+          modules[r][c] = false;
+        } else {
+          modules[r][c] = bw[iy * width + ix] === 0;
+        }
+      }
+    }
+    return modules;
+  }
+
+  function detectVersionFromFinders(tl, tr, bl) {
+    const dx = Math.hypot(tr.x - tl.x, tr.y - tl.y);
+    const dy = Math.hypot(bl.x - tl.x, bl.y - tl.y);
+    const moduleSize = (tl.size + tr.size + bl.size) / 3;
+    if (moduleSize < 1) throw new Error("无法估计模块大小");
+    const distModulesX = dx / moduleSize;
+    const distModulesY = dy / moduleSize;
+    // dist between finder centers = version*4 + 17 - 7 = version*4 + 10
+    const vFromX = (distModulesX - 10) / 4;
+    const vFromY = (distModulesY - 10) / 4;
+    const v = Math.round((vFromX + vFromY) / 2);
+    if (v < 1 || v > 15) throw new Error("无法识别二维码版本");
+    return v;
+  }
+
+  function decodeImageElement(img) {
+    const maxSide = 1200;
+    const scale = Math.min(1, maxSide / Math.max(img.naturalWidth || img.width, img.naturalHeight || img.height));
+    const w = Math.max(1, Math.round((img.naturalWidth || img.width) * scale));
+    const h = Math.max(1, Math.round((img.naturalHeight || img.height) * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, w, h);
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const { bw, width, height } = binarize(imageData);
+
+    // also try inverted
+    for (const invert of [false, true]) {
+      const bin = invert ? bw.map((v) => 1 - v) : bw;
+      let centers = findFinderCenters(bin, width, height);
+      if (centers.length < 3) continue;
+      // pick 3 that form largest right-ish triangle
+      let bestTri = null;
+      let bestArea = 0;
+      for (let i = 0; i < centers.length; i++) {
+        for (let j = i + 1; j < centers.length; j++) {
+          for (let k = j + 1; k < centers.length; k++) {
+            const a = centers[i];
+            const b = centers[j];
+            const c = centers[k];
+            const area = Math.abs((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)) / 2;
+            // assign TL/TR/BL: TL has min x+y, TR max x-min y, BL min x-max y roughly
+            const pts = [a, b, c].slice().sort((p, q) => (p.x + p.y) - (q.x + q.y));
+            const tl = pts[0];
+            const others = [a, b, c].filter((p) => p !== tl);
+            others.sort((p, q) => p.x - q.x);
+            const bl = others[0].x < others[1].x ? others[0] : others[1];
+            const tr = others[0].x < others[1].x ? others[1] : others[0];
+            // better: BL has larger y among leftish, TR has larger x
+            const withY = [a, b, c].slice().sort((p, q) => (p.x + p.y) - (q.x + q.y));
+            const tl2 = withY[0];
+            const rest = [a, b, c].filter((p) => p !== tl2);
+            rest.sort((p, q) => p.y - q.y);
+            const tr2 = rest[0].y < rest[1].y ? rest[0] : rest[1];
+            const bl2 = rest[0].y < rest[1].y ? rest[1] : rest[0];
+            if (area > bestArea) {
+              bestArea = area;
+              bestTri = { tl: tl2, tr: tr2, bl: bl2 };
+            }
+          }
+        }
+      }
+      if (!bestTri) continue;
+      try {
+        const version = detectVersionFromFinders(bestTri.tl, bestTri.tr, bestTri.bl);
+        const modules = sampleMatrix(bin, width, height, bestTri, version);
+        const text = decodeBitMatrix(modules, modules.length);
+        if (text && text.length) {
+          return { text, version };
+        }
+      } catch (e) {
+        // try next
+      }
+    }
+    throw new Error("未能识别该图片中的二维码，请换更清晰、正对的图");
+  }
+
+  async function loadDecFile(file) {
+    if (!file || !file.type || file.type.indexOf("image/") !== 0) {
+      setDecStatus("请选择图片文件", "err");
+      return;
+    }
+    // invalidate any in-flight decode from a previous upload
+    const token = ++decToken;
+    if (decTimer) {
+      clearTimeout(decTimer);
+      decTimer = null;
+    }
+    if (decUrl) {
+      URL.revokeObjectURL(decUrl);
+      decUrl = null;
+    }
+    // reset UI immediately so stale text cannot linger
+    decResult.value = "";
+    copyResult.disabled = true;
+    setDecStatus("正在解码…");
+
+    decUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      if (token !== decToken) return;
+      showDecImage(img);
+      decTimer = setTimeout(() => {
+        if (token !== decToken) return;
+        try {
+          const { text, version } = decodeImageElement(img);
+          if (token !== decToken) return;
+          decResult.value = text;
+          copyResult.disabled = !text;
+          setDecStatus(`识别成功 · 版本 ${version} · ${charLen(text)} 字符`, "ok");
+        } catch (e) {
+          if (token !== decToken) return;
+          setDecStatus(e && e.message ? e.message : "解码失败", "err");
+        }
+      }, 20);
+    };
+    img.onerror = () => {
+      if (token !== decToken) return;
+      setDecStatus("图片加载失败", "err");
+    };
+    img.src = decUrl;
+  }
+
+  function pickDec() {
+    // allow re-picking the same file
+    decFile.value = "";
+    decFile.click();
+  }
+  decDrop.addEventListener("click", pickDec);
+  decDrop.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      pickDec();
+    }
+  });
+  decFile.addEventListener("change", () => {
+    const f = decFile.files && decFile.files[0];
+    if (f) loadDecFile(f);
+    // reset so choosing the same path again still fires change
+    decFile.value = "";
+  });
+  ["dragenter", "dragover"].forEach((ev) => {
+    decDrop.addEventListener(ev, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      decDrop.classList.add("dragover");
+    });
+  });
+  ["dragleave", "drop"].forEach((ev) => {
+    decDrop.addEventListener(ev, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      decDrop.classList.remove("dragover");
+    });
+  });
+  decDrop.addEventListener("drop", (e) => {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) loadDecFile(f);
+  });
+
+  copyResult.addEventListener("click", async () => {
+    const text = decResult.value;
+    if (!text) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        decResult.select();
+        document.execCommand("copy");
+      }
+      setDecStatus("已复制到剪贴板", "ok");
+    } catch {
+      setDecStatus("复制失败，请手动选择复制", "err");
+    }
+  });
+
+  window.addEventListener("beforeunload", () => {
+    if (decUrl) URL.revokeObjectURL(decUrl);
+  });
+})();
+</script>
+</body>
+</html>

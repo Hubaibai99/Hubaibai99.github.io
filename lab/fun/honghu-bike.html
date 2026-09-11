@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Xiaomi MIMO一句话做出来的鸿鹄骑单车">
+    <title>鸿鹄骑单车</title>
+    <style>
+         :root {
+            --paper: #f3ecdc;
+            --ink: #1c2b2a;
+            --vermilion: #c45c24;
+            --jade: #3d7a6a;
+            --mist: #8a9a8e;
+            --rule: #cfc4ae;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(1200px 600px at 50% -10%, #e7dcc4 0%, transparent 60%), var(--paper);
+            color: var(--ink);
+            font-family: "Songti SC", "Noto Serif SC", "SimSun", Georgia, serif;
+        }
+        
+        .card {
+            width: min(720px, 100%);
+            background: #faf6eb;
+            border: 1px solid var(--rule);
+            box-shadow: 0 18px 40px rgba(28, 43, 42, 0.08);
+        }
+        
+        header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--rule);
+        }
+        
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+        }
+        
+        .sub {
+            font-size: 12px;
+            color: var(--mist);
+            letter-spacing: 0.08em;
+        }
+        
+        .seal {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--vermilion);
+            color: var(--vermilion);
+            display: grid;
+            place-items: center;
+            font-size: 11px;
+            line-height: 1.15;
+            letter-spacing: 0;
+            writing-mode: vertical-rl;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        
+        .stage {
+            position: relative;
+            background: #1c2b2a;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        
+        .hud {
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            display: flex;
+            gap: 10px;
+            font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            color: rgba(250, 246, 235, 0.9);
+            pointer-events: none;
+        }
+        
+        .hud span {
+            background: rgba(28, 43, 42, 0.35);
+            padding: 4px 8px;
+            border-radius: 2px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 16px;
+            align-items: center;
+            padding: 14px 20px 16px;
+            border-top: 1px solid var(--rule);
+        }
+        
+        label.slow {
+            display: grid;
+            gap: 6px;
+            font-size: 13px;
+            letter-spacing: 0.12em;
+        }
+        
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+            font-size: 12px;
+            color: var(--mist);
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 2px;
+            background: var(--rule);
+            border-radius: 1px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--vermilion);
+            border: 2px solid #faf6eb;
+            box-shadow: 0 0 0 1px var(--vermilion);
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--vermilion);
+            border: 2px solid #faf6eb;
+            box-shadow: 0 0 0 1px var(--vermilion);
+            cursor: pointer;
+        }
+        
+        input[type="range"]:focus-visible {
+            outline: 2px solid var(--vermilion);
+            outline-offset: 6px;
+        }
+        
+        button {
+            font-family: inherit;
+            font-size: 13px;
+            letter-spacing: 0.14em;
+            padding: 8px 14px;
+            min-height: 36px;
+            background: transparent;
+            color: var(--ink);
+            border: 1px solid var(--rule);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+        
+        button:hover {
+            border-color: var(--ink);
+        }
+        
+        button:active {
+            background: var(--ink);
+            color: #faf6eb;
+        }
+        
+        button:focus-visible {
+            outline: 2px solid var(--vermilion);
+            outline-offset: 2px;
+        }
+        
+        footer {
+            padding: 0 20px 14px;
+            font-size: 12px;
+            color: var(--mist);
+            letter-spacing: 0.06em;
+        }
+        
+        @media (max-width: 520px) {
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+            label.slow {
+                grid-column: 1 / -1;
+            }
+            h1 {
+                font-size: 18px;
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            button {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <header>
+            <div>
+                <h1>鸿鹄骑单车</h1>
+                <p class="sub">燕雀安知鸿鹄之志 · 志在轮上</p>
+            </div>
+            <div class="seal" aria-hidden="true">鸿鹄</div>
+        </header>
+
+        <div class="stage">
+            <canvas id="scene" width="720" height="420" role="img" aria-label="一只鸿鹄骑着单车穿过山水长卷"></canvas>
+            <div class="hud" aria-live="polite">
+                <span id="hudSpeed">速 0.0</span>
+                <span id="hudDist">程 0 里</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <label class="slow" for="speed">
+        蹬踏
+        <input id="speed" type="range" min="0" max="100" value="42" aria-label="调整骑行速度" />
+      </label>
+            <button id="toggleNight" type="button" aria-pressed="false">入夜</button>
+            <button id="reset" type="button">归零</button>
+        </div>
+        <footer>拖动速度杆，看鸿鹄振翅与风起。← → 键也可微调。</footer>
+    </div>
+
+    <script>
+        (() => {
+            const canvas = document.getElementById("scene");
+            const ctx = canvas.getContext("2d");
+            const speedInput = document.getElementById("speed");
+            const btnNight = document.getElementById("toggleNight");
+            const btnReset = document.getElementById("reset");
+            const hudSpeed = document.getElementById("hudSpeed");
+            const hudDist = document.getElementById("hudDist");
+
+            const W = canvas.width;
+            const H = canvas.height;
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            const state = {
+                speed: 0.42,
+                night: false,
+                dist: 0,
+                t: 0,
+                wheel: 0,
+                pedal: 0,
+                bob: 0,
+                flap: 0,
+                hills: [0, 0, 0],
+                road: 0,
+                feathers: [],
+                speedLines: [],
+                blink: 0,
+            };
+
+            const ink = "#1c2b2a";
+            const paper = "#f3ecdc";
+            const vermilion = "#c45c24";
+
+            function lerp(a, b, t) {
+                return a + (b - a) * t;
+            }
+
+            function mix(hexA, hexB, t) {
+                const pa = [1, 3, 5].map((i) => parseInt(hexA.slice(i, i + 2), 16));
+                const pb = [1, 3, 5].map((i) => parseInt(hexB.slice(i, i + 2), 16));
+                const c = pa.map((v, i) => Math.round(lerp(v, pb[i], t)));
+                return `rgb(${c[0]},${c[1]},${c[2]})`;
+            }
+
+            function skyTop() {
+                return state.night ? "#1a2740" : "#dfe9d8";
+            }
+
+            function skyBottom() {
+                return state.night ? "#3d4f63" : "#f0e2c2";
+            }
+
+            function hillColor(depth) {
+                const near = state.night ? "#1f3a38" : "#3d7a6a";
+                const far = state.night ? "#2a3d4a" : "#a8b5a0";
+                return mix(far, near, depth);
+            }
+
+            function drawSky() {
+                const g = ctx.createLinearGradient(0, 0, 0, H * 0.72);
+                g.addColorStop(0, skyTop());
+                g.addColorStop(1, skyBottom());
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, W, H);
+
+                const sunX = W * 0.78;
+                const sunY = state.night ? H * 0.18 : H * 0.22;
+                if (state.night) {
+                    ctx.fillStyle = "#f2ead2";
+                    ctx.beginPath();
+                    ctx.arc(sunX, sunY, 22, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = skyTop();
+                    ctx.beginPath();
+                    ctx.arc(sunX + 9, sunY - 6, 18, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "rgba(242, 234, 210, 0.85)";
+                    for (let i = 0; i < 28; i++) {
+                        const a = (i * 137.5) % Math.PI;
+                        const r = 40 + (i * 23) % 200;
+                        const x = (i * 97) % W;
+                        const y = 20 + (i * 41) % (H * 0.35);
+                        ctx.globalAlpha = 0.35 + 0.45 * Math.abs(Math.sin(state.t * 0.8 + i));
+                        ctx.fillRect(x, y, 1.6, 1.6);
+                    }
+                    ctx.globalAlpha = 1;
+                } else {
+                    const sg = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, 48);
+                    sg.addColorStop(0, "rgba(255, 236, 180, 0.95)");
+                    sg.addColorStop(0.45, "rgba(250, 210, 130, 0.45)");
+                    sg.addColorStop(1, "rgba(250, 210, 130, 0)");
+                    ctx.fillStyle = sg;
+                    ctx.beginPath();
+                    ctx.arc(sunX, sunY, 48, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "#f6d78a";
+                    ctx.beginPath();
+                    ctx.arc(sunX, sunY, 18, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // clouds
+                ctx.save();
+                const cloudSpeed = reduceMotion ? 0 : 0.15 + state.speed * 0.55;
+                for (let i = 0; i < 5; i++) {
+                    const base = i * 173;
+                    const x = ((base - state.t * cloudSpeed * 40) % (W + 140) + W + 140) % (W + 140) - 70;
+                    const y = 48 + (i % 3) * 36;
+                    const s = 0.7 + (i % 4) * 0.15;
+                    ctx.fillStyle = state.night ? "rgba(230, 236, 240, 0.08)" : "rgba(255, 252, 244, 0.55)";
+                    ctx.beginPath();
+                    ctx.ellipse(x, y, 46 * s, 12 * s, 0, 0, Math.PI * 2);
+                    ctx.ellipse(x + 28 * s, y + 4, 30 * s, 10 * s, 0, 0, Math.PI * 2);
+                    ctx.ellipse(x - 26 * s, y + 5, 26 * s, 9 * s, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+
+                // distant birds
+                ctx.strokeStyle = state.night ? "rgba(240,240,230,0.35)" : "rgba(28,43,42,0.35)";
+                ctx.lineWidth = 1.2;
+                for (let i = 0; i < 3; i++) {
+                    const bx = 90 + i * 54 + Math.sin(state.t * 0.4 + i) * 8;
+                    const by = 70 + i * 14;
+                    ctx.beginPath();
+                    ctx.moveTo(bx - 8, by);
+                    ctx.quadraticCurveTo(bx - 3, by - 5, bx, by);
+                    ctx.quadraticCurveTo(bx + 3, by - 5, bx + 8, by);
+                    ctx.stroke();
+                }
+            }
+
+            function hillPath(amp, freq, offset, baseY) {
+                ctx.beginPath();
+                ctx.moveTo(-10, H);
+                for (let x = -10; x <= W + 10; x += 8) {
+                    const y = baseY +
+                        Math.sin((x + offset) * freq) * amp +
+                        Math.sin((x + offset) * freq * 2.3 + 1.7) * amp * 0.35;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(W + 10, H);
+                ctx.closePath();
+            }
+
+            function drawHills() {
+                const defs = [{
+                    amp: 18,
+                    freq: 0.008,
+                    depth: 0.15,
+                    base: 210,
+                    rate: 0.18
+                }, {
+                    amp: 26,
+                    freq: 0.011,
+                    depth: 0.55,
+                    base: 248,
+                    rate: 0.45
+                }, {
+                    amp: 20,
+                    freq: 0.016,
+                    depth: 1.0,
+                    base: 292,
+                    rate: 1.0
+                }, ];
+                defs.forEach((d, i) => {
+                    if (!reduceMotion) state.hills[i] += d.rate * state.speed * 1.8;
+                    ctx.fillStyle = hillColor(d.depth);
+                    hillPath(d.amp, d.freq, state.hills[i], d.base);
+                    ctx.fill();
+                });
+
+                // ink trees on mid hill
+                ctx.fillStyle = state.night ? "#16302e" : "#2f5f54";
+                for (let i = 0; i < 14; i++) {
+                    const x = ((i * 89 - state.hills[1] * 1.4) % (W + 80) + W + 80) % (W + 80) - 40;
+                    const y = 250 + Math.sin(x * 0.011 + state.hills[1] * 0.011) * 24 + Math.sin(x * 0.025 + 1.7) * 8;
+                    drawTree(x, y - 4, 10 + (i % 3) * 3);
+                }
+            }
+
+            function drawTree(x, y, s) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.strokeStyle = state.night ? "#0f2422" : "#24483f";
+                ctx.lineWidth = 1.4;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, -s);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, -s * 0.55);
+                ctx.lineTo(-s * 0.45, -s * 0.2);
+                ctx.moveTo(0, -s * 0.7);
+                ctx.lineTo(s * 0.4, -s * 0.3);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function drawRoad() {
+                const roadY = 330;
+                ctx.fillStyle = state.night ? "#243438" : "#cbb892";
+                ctx.fillRect(0, roadY, W, H - roadY);
+
+                ctx.strokeStyle = state.night ? "rgba(240,240,230,0.12)" : "rgba(28,43,42,0.12)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, roadY + 1);
+                ctx.lineTo(W, roadY + 1);
+                ctx.stroke();
+
+                if (!reduceMotion) state.road += 4 + state.speed * 42;
+                ctx.strokeStyle = state.night ? "rgba(240,240,230,0.35)" : "rgba(28,43,42,0.35)";
+                ctx.lineWidth = 2;
+                ctx.setLineDash([22, 18]);
+                ctx.lineDashOffset = -state.road;
+                ctx.beginPath();
+                ctx.moveTo(0, roadY + 28);
+                ctx.lineTo(W, roadY + 28);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // stones
+                ctx.fillStyle = state.night ? "rgba(240,240,230,0.08)" : "rgba(28,43,42,0.10)";
+                for (let i = 0; i < 18; i++) {
+                    const x = ((i * 53 - state.road * 0.5) % (W + 40) + W + 40) % (W + 40) - 20;
+                    const y = roadY + 50 + (i * 17) % 30;
+                    ctx.fillRect(x, y, 8 + (i % 4) * 3, 2);
+                }
+            }
+
+            function drawWheel(cx, cy, r, rot) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rot);
+
+                ctx.strokeStyle = state.night ? "#d8d2c2" : ink;
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                ctx.arc(0, 0, r, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.lineWidth = 1;
+                ctx.globalAlpha = 0.7;
+                for (let i = 0; i < 10; i++) {
+                    const a = (i / 10) * Math.PI * 2;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(Math.cos(a) * (r - 2), Math.sin(a) * (r - 2));
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+
+                ctx.fillStyle = vermilion;
+                ctx.beginPath();
+                ctx.arc(0, 0, 3.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function drawBikeAndBird(cx, groundY, scale) {
+                const bob = Math.sin(state.bob) * 2.2 * (0.35 + state.speed);
+                const x = cx;
+                const y = groundY + bob;
+
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.scale(scale, scale);
+
+                const wheelR = 34;
+                const rear = {
+                    x: -42,
+                    y: -wheelR
+                };
+                const front = {
+                    x: 42,
+                    y: -wheelR
+                };
+                const crank = {
+                    x: 0,
+                    y: -wheelR
+                };
+                const seat = {
+                    x: -18,
+                    y: -wheelR - 38
+                };
+                const bar = {
+                    x: 34,
+                    y: -wheelR - 42
+                };
+
+                // shadow
+                ctx.fillStyle = "rgba(28,43,42,0.18)";
+                ctx.beginPath();
+                ctx.ellipse(0, 4, 70, 7, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // frame
+                ctx.strokeStyle = state.night ? "#e0d6c0" : ink;
+                ctx.lineWidth = 3;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                ctx.beginPath();
+                ctx.moveTo(rear.x, rear.y);
+                ctx.lineTo(seat.x, seat.y);
+                ctx.lineTo(crank.x, crank.y);
+                ctx.closePath();
+                ctx.moveTo(seat.x, seat.y);
+                ctx.lineTo(bar.x, bar.y);
+                ctx.lineTo(front.x, front.y);
+                ctx.moveTo(crank.x, crank.y);
+                ctx.lineTo(front.x, front.y);
+                ctx.stroke();
+
+                // fork + bars
+                ctx.beginPath();
+                ctx.moveTo(front.x, front.y);
+                ctx.lineTo(bar.x, bar.y);
+                ctx.moveTo(bar.x, bar.y);
+                ctx.lineTo(bar.x + 10, bar.y - 6);
+                ctx.stroke();
+
+                // seat
+                ctx.fillStyle = vermilion;
+                ctx.beginPath();
+                ctx.ellipse(seat.x - 2, seat.y - 3, 10, 3.5, -0.15, 0, Math.PI * 2);
+                ctx.fill();
+
+                // chainring + crank
+                ctx.strokeStyle = state.night ? "#e0d6c0" : ink;
+                ctx.lineWidth = 1.6;
+                ctx.beginPath();
+                ctx.arc(crank.x, crank.y, 10, 0, Math.PI * 2);
+                ctx.stroke();
+
+                const pa = state.pedal;
+                const pedalLen = 16;
+                const p1 = {
+                    x: crank.x + Math.cos(pa) * pedalLen,
+                    y: crank.y + Math.sin(pa) * pedalLen
+                };
+                const p2 = {
+                    x: crank.x - Math.cos(pa) * pedalLen,
+                    y: crank.y - Math.sin(pa) * pedalLen
+                };
+
+                ctx.lineWidth = 2.4;
+                ctx.beginPath();
+                ctx.moveTo(crank.x, crank.y);
+                ctx.lineTo(p1.x, p1.y);
+                ctx.moveTo(crank.x, crank.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+
+                // pedals
+                drawPedal(p1.x, p1.y);
+                drawPedal(p2.x, p2.y);
+
+                // wheels
+                drawWheel(rear.x, rear.y, wheelR, state.wheel);
+                drawWheel(front.x, front.y, wheelR, state.wheel);
+
+                // --- 鸿鹄 ---
+                // legs to pedals
+                const hip = {
+                    x: seat.x + 2,
+                    y: seat.y - 6
+                };
+                ctx.strokeStyle = state.night ? "#e8b86a" : "#d4a017";
+                ctx.lineWidth = 2.6;
+                drawLeg(hip, p1);
+                drawLeg(hip, p2);
+
+                // body
+                ctx.save();
+                ctx.translate(seat.x + 4, seat.y - 14);
+                const lean = -0.08 - state.speed * 0.06;
+                ctx.rotate(lean);
+
+                // tail feathers
+                ctx.fillStyle = "#f7f3ea";
+                ctx.strokeStyle = ink;
+                ctx.lineWidth = 1.4;
+                ctx.beginPath();
+                ctx.moveTo(-28, -2);
+                ctx.quadraticCurveTo(-52, -18, -58, -6);
+                ctx.quadraticCurveTo(-46, 0, -54, 10);
+                ctx.quadraticCurveTo(-36, 8, -26, 6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // body ellipse
+                ctx.fillStyle = "#fbf8f1";
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 28, 18, 0.1, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // wing
+                const flapA = state.flap * (0.15 + state.speed * 0.85);
+                ctx.save();
+                ctx.translate(2, -4);
+                ctx.rotate(-0.35 + flapA);
+                ctx.fillStyle = "#f1ebe0";
+                ctx.beginPath();
+                ctx.ellipse(6, 4, 22, 10, 0.25, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                // black wingtip
+                ctx.fillStyle = ink;
+                ctx.beginPath();
+                ctx.ellipse(20, 8, 8, 4.5, 0.35, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // neck
+                ctx.strokeStyle = ink;
+                ctx.lineWidth = 2;
+                ctx.fillStyle = "#fbf8f1";
+                ctx.beginPath();
+                ctx.moveTo(16, -6);
+                ctx.bezierCurveTo(28, -18, 30, -40, 22, -52);
+                ctx.bezierCurveTo(28, -40, 22, -20, 10, -2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // head
+                ctx.beginPath();
+                ctx.ellipse(22, -54, 11, 9, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // beak
+                ctx.fillStyle = vermilion;
+                ctx.beginPath();
+                ctx.moveTo(30, -56);
+                ctx.lineTo(48, -52);
+                ctx.lineTo(30, -48);
+                ctx.closePath();
+                ctx.fill();
+
+                // eye
+                const blinking = state.blink < 0.06;
+                ctx.fillStyle = ink;
+                if (blinking) {
+                    ctx.fillRect(22, -56, 5, 1.2);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(24, -56, 1.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                // brow mark (鸿鹄之志)
+                ctx.strokeStyle = ink;
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(18, -62);
+                ctx.lineTo(28, -64);
+                ctx.stroke();
+
+                // crest feathers
+                ctx.beginPath();
+                ctx.moveTo(14, -60);
+                ctx.quadraticCurveTo(8, -72, 16, -70);
+                ctx.moveTo(18, -62);
+                ctx.quadraticCurveTo(16, -76, 24, -72);
+                ctx.stroke();
+
+                ctx.restore(); // body
+
+                // scarf flutter
+                ctx.strokeStyle = vermilion;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(seat.x + 8, seat.y - 40);
+                const wave = Math.sin(state.t * 6) * (4 + state.speed * 10);
+                ctx.quadraticCurveTo(seat.x - 10, seat.y - 48 + wave, seat.x - 30 - state.speed * 20, seat.y - 40 - wave * 0.6);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            function drawPedal(x, y) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.fillStyle = ink;
+                ctx.fillRect(-6, -2, 12, 4);
+                ctx.restore();
+            }
+
+            function drawLeg(hip, pedal) {
+                const kneeX = (hip.x + pedal.x) / 2 + 10;
+                const kneeY = (hip.y + pedal.y) / 2 - 4;
+                ctx.beginPath();
+                ctx.moveTo(hip.x, hip.y);
+                ctx.lineTo(kneeX, kneeY);
+                ctx.lineTo(pedal.x, pedal.y);
+                ctx.stroke();
+            }
+
+            function spawnEffects() {
+                if (reduceMotion) return;
+                if (state.speed > 0.55 && Math.random() < state.speed * 0.12) {
+                    state.speedLines.push({
+                        x: 40 + Math.random() * 120,
+                        y: 200 + Math.random() * 120,
+                        len: 18 + Math.random() * 30,
+                        life: 1,
+                    });
+                }
+                if (state.speed > 0.7 && Math.random() < 0.03) {
+                    state.feathers.push({
+                        x: 250 + Math.random() * 30,
+                        y: 180 + Math.random() * 40,
+                        vx: -1.5 - Math.random() * 2,
+                        vy: 0.4 + Math.random() * 0.8,
+                        rot: Math.random() * Math.PI,
+                        vr: (Math.random() - 0.5) * 0.1,
+                        life: 1,
+                    });
+                }
+            }
+
+            function drawParticles(dt) {
+                state.speedLines = state.speedLines.filter((p) => p.life > 0);
+                state.feathers = state.feathers.filter((p) => p.life > 0);
+
+                ctx.strokeStyle = state.night ? "rgba(240,240,230,0.35)" : "rgba(28,43,42,0.25)";
+                ctx.lineWidth = 1;
+                state.speedLines.forEach((p) => {
+                    p.x -= (40 + state.speed * 160) * dt;
+                    p.life -= dt * 1.2;
+                    ctx.globalAlpha = Math.max(0, p.life);
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p.x + p.len, p.y);
+                    ctx.stroke();
+                });
+
+                state.feathers.forEach((p) => {
+                    p.x += p.vx * (1 + state.speed) * 60 * dt;
+                    p.y += p.vy * 60 * dt + Math.sin(state.t * 3 + p.rot) * 0.3;
+                    p.rot += p.vr;
+                    p.life -= dt * 0.35;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rot);
+                    ctx.globalAlpha = Math.max(0, p.life);
+                    ctx.fillStyle = "#fbf8f1";
+                    ctx.strokeStyle = ink;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, 8, 3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.restore();
+                });
+                ctx.globalAlpha = 1;
+            }
+
+            function updateHud() {
+                const shownSpeed = (state.speed * 32).toFixed(1);
+                const li = Math.floor(state.dist);
+                hudSpeed.textContent = `速 ${shownSpeed}`;
+                hudDist.textContent = `程 ${li} 里`;
+            }
+
+            let last = performance.now();
+
+            function frame(now) {
+                const dt = Math.min(0.05, (now - last) / 1000);
+                last = now;
+                state.t += dt;
+
+                state.speed = Number(speedInput.value) / 100;
+                if (!reduceMotion) {
+                    state.wheel += state.speed * 9 * dt;
+                    state.pedal += state.speed * 7 * dt;
+                    state.bob += dt * (2 + state.speed * 8);
+                    state.dist += state.speed * 18 * dt;
+                    state.blink -= dt;
+                    if (state.blink < -3 - Math.random() * 4) state.blink = 0.12;
+                    // wing flap oscillates faster with speed
+                    state.flap = Math.sin(state.t * (3 + state.speed * 14)) * 0.55;
+                } else {
+                    state.wheel = 0.4;
+                    state.pedal = 0.8;
+                    state.flap = 0.1;
+                }
+
+                spawnEffects();
+
+                ctx.clearRect(0, 0, W, H);
+                drawSky();
+                drawHills();
+                drawRoad();
+                drawParticles(dt);
+                drawBikeAndBird(300, 368, 1);
+                updateHud();
+
+                requestAnimationFrame(frame);
+            }
+
+            speedInput.addEventListener("input", () => {
+                state.speed = Number(speedInput.value) / 100;
+            });
+
+            speedInput.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+                    e.preventDefault();
+                    const step = e.shiftKey ? 10 : 2;
+                    const dir = e.key === "ArrowRight" ? 1 : -1;
+                    speedInput.value = String(Math.min(100, Math.max(0, Number(speedInput.value) + dir * step)));
+                }
+            });
+
+            btnNight.addEventListener("click", () => {
+                state.night = !state.night;
+                btnNight.textContent = state.night ? "天明" : "入夜";
+                btnNight.setAttribute("aria-pressed", String(state.night));
+            });
+
+            btnReset.addEventListener("click", () => {
+                speedInput.value = "0";
+                state.speed = 0;
+                state.dist = 0;
+                state.wheel = 0;
+                state.pedal = 0;
+                state.feathers = [];
+                state.speedLines = [];
+                updateHud();
+            });
+
+            updateHud();
+            requestAnimationFrame(frame);
+        })();
+    </script>
+</body>
+
+</html>
